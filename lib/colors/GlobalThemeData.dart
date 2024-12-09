@@ -14,12 +14,13 @@ class GlobalThemeData {
   static const ColorScheme lightColorScheme = ColorScheme(
     primary: Color(0xFF4779a2),
     onPrimary: Colors.black45,
-    secondary: Color(0xFF4779a2),
-    onSecondary: Colors.black38,
+    secondary: Color(0xFFb6e0ff),
+    onSecondary: Color(0xFF4779a2),
     error: Colors.redAccent,
     onError: Colors.white,
     surface: Colors.white,
-    onSurface: Colors.black,
+    surfaceTint: Color(0xFFf3faff),
+    onSurface: Color(0xFF4A4A4A),
     brightness: Brightness.light,
   );
 
@@ -27,12 +28,13 @@ class GlobalThemeData {
     primary: Color(0xFF4779a2),
     onPrimary: Colors.black45,
     secondary: Color(0xFF4779a2),
-    onSecondary: Colors.black38,
+    onSecondary: Color(0xff90d0ff),
     error: Colors.redAccent,
     onError: Colors.white,
     surface: Colors.black54,
-    onSurface: Colors.white,
-    brightness: Brightness.light,
+    surfaceTint: Color(0xFF303030),
+    onSurface: Colors.white60,
+    brightness: Brightness.dark,
   );
 
   static const _lightFocusColor = Color(0xFFeaf6ff);

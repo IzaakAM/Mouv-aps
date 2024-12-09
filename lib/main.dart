@@ -1,4 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'package:mouv_aps/screens/HomePage.dart';
 import 'package:mouv_aps/colors/GlobalThemeData.dart';
 
 void main() {
@@ -17,7 +22,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       theme: GlobalThemeData.lightThemeData,
       darkTheme: GlobalThemeData.darkThemeData,
-      home: const MyHomePage(title: 'Mouv\'APS'),
+      home: const HomePage()
     );
   }
 }
@@ -32,7 +37,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
