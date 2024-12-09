@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mouv_aps/widgets/navbar.dart';
+import 'package:mouv_aps/widgets/topbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,6 +25,7 @@ class _HomePageState extends State<HomePage> {
       ));
     }
     return Scaffold(
+      appBar: TopBar(title: 'Accueil'),
       backgroundColor: Theme.of(context).colorScheme.surface,
       bottomNavigationBar: const MainNavigationBar(),
     );
