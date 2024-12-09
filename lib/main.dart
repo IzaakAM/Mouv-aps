@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import 'package:mouv_aps/screens/HomePage.dart';
 import 'package:mouv_aps/colors/GlobalThemeData.dart';
+import 'package:mouv_aps/widgets/PagesView.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,25 +23,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       theme: GlobalThemeData.lightThemeData,
       darkTheme: GlobalThemeData.darkThemeData,
-      home: const HomePage()
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      home: const PagesView()
     );
   }
 }

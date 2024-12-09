@@ -2,16 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class TopBar extends StatelessWidget implements PreferredSizeWidget {
+class TopBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
 
   const TopBar({super.key, required this.title});
 
   @override
+  State<TopBar> createState() => _TopBarState();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _TopBarState extends State<TopBar> {
+  int points = 10;
+
+  @override
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        title,
+        widget.title,
         style: GoogleFonts.oswald(
           textStyle: TextStyle(
             color: Theme.of(context).colorScheme.primary,
@@ -22,7 +32,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: <Widget>[
         Text(
-          '10pts ',
+          '$points pts',
           style: GoogleFonts.oswald(
             textStyle: TextStyle(
               color: Theme.of(context).colorScheme.onSurface,
@@ -32,7 +42,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15),
+          padding: const EdgeInsets.only(left: 20, right: 15),
           child: Icon(
             FontAwesomeIcons.solidCircleUser,
             size: 35,
@@ -42,7 +52,4 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
       ],
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
