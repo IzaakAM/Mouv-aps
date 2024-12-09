@@ -107,15 +107,6 @@
           "response": "Dans le \u00ab chat \u00bb."
         }
       ]
-    },
-    {
-      "name": "Notifications",
-      "events": [
-        "D\u00e8s qu'il y a modification des informations personnelles",
-        "D\u00e8s que l'utilisateur a mentionn\u00e9 la question de douleur",
-        "D\u00e8s que les objectifs et attentes ont chang\u00e9",
-        "Notification de message dans le chat"
-      ]
     }
   ]
 }

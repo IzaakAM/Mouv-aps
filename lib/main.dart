@@ -43,7 +43,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mouv_aps/colors/GlobalThemeData.dart';
-import 'package:mouv_aps/screens/chatbot/chatbot.dart';
+import 'package:mouv_aps/screens/chatbot/ChatPage.dart';
 
 void main() {
   runApp(const MyApp());
