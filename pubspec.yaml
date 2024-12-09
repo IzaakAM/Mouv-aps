@@ -88,3 +88,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  assets:
+    - lib/screens/chatbot/tree.json # Inclure le fichier JSON pour l'arbre de décision
