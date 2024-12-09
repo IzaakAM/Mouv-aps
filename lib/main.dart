@@ -1,13 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:mouv_aps/screens/HomePage.dart';
 import 'package:mouv_aps/colors/GlobalThemeData.dart';
 import 'package:mouv_aps/widgets/PagesView.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
 
