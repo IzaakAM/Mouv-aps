@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:mouv_aps/screens/HomePage.dart';
 import 'package:mouv_aps/colors/GlobalThemeData.dart';
 import 'package:mouv_aps/widgets/PagesView.dart';
+import 'package:mouv_aps/screens/profil.dart';
 
 void main() {
   runApp(const MyApp());
