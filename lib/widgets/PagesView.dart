@@ -1,5 +1,5 @@
-import 'dart:io';
-
+import 'dart:io'; // Réimportation pour Platform
+import 'package:flutter/foundation.dart'; // Pour kIsWeb
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -39,12 +39,10 @@ class _PagesViewState extends State<PagesView> {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
+    // Correction avec vérification Web et Android
+    if (!kIsWeb && Platform.isAndroid) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarColor: Theme
-            .of(context)
-            .colorScheme
-            .surfaceTint,
+        systemNavigationBarColor: Theme.of(context).colorScheme.surfaceTint,
         systemNavigationBarIconBrightness: Brightness.light,
       ));
     }
