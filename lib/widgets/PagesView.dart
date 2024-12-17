@@ -53,6 +53,11 @@ class _PagesViewState extends State<PagesView> {
       body: PageView(
         controller: pageController,
         children: pages,
+        onPageChanged: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: TopBar(title: pageTitles[currentPageIndex]),
