@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../screens/profil.dart'; // Import the ProfilePage
 
 class TopBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
@@ -20,6 +21,7 @@ class _TopBarState extends State<TopBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Colors.black, // Example theme
       title: Text(
         widget.title,
         style: GoogleFonts.oswald(
@@ -31,22 +33,36 @@ class _TopBarState extends State<TopBar> {
         ),
       ),
       actions: <Widget>[
-        Text(
-          '$points pts',
-          style: GoogleFonts.oswald(
-            textStyle: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontSize: 25,
-              fontWeight: FontWeight.w300,
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Text(
+              '$points pts',
+              style: GoogleFonts.oswald(
+                textStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
             ),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 15),
-          child: Icon(
-            FontAwesomeIcons.solidCircleUser,
-            size: 35,
-            color: Theme.of(context).colorScheme.onSurface,
+          child: GestureDetector(
+            onTap: () {
+              // Navigate to ProfilePage
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfilePage()),
+              );
+            },
+            child: Icon(
+              FontAwesomeIcons.solidCircleUser,
+              size: 35,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
         ),
       ],
