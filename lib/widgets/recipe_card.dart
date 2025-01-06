@@ -19,11 +19,26 @@ class RecipeCard extends StatelessWidget {
           ),
         );
       },
-      child: Card(
+      child: Container(
+        margin: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.primary,
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+              blurRadius: 8,
+            ),
+          ],
+        ),
         child: Column(
           children: <Widget>[
             ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(9),
               child: Image.network(
                 recipe.thumbnailUrl,
                 width: 150,

@@ -107,7 +107,7 @@ class RecipeView extends StatelessWidget {
                           'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.arrow_circle_right_rounded, size: 50),
+                  icon: const Icon(Icons.arrow_circle_right_outlined, size: 40),
                   onPressed: () {
                     Navigator.push(
                       context,

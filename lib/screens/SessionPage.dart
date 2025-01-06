@@ -51,7 +51,6 @@ class _SessionPageState extends State<SessionPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             VideoPlayerWidget(videoUrl: widget.session.videoUrl),
-            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -67,6 +66,8 @@ class _SessionPageState extends State<SessionPage> {
                     )),
               ],
             ),
+            const SizedBox(height: 10),
+            const Divider(indent: 10, endIndent: 10),
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.all(8.0),

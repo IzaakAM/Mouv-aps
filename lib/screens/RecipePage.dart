@@ -68,6 +68,8 @@ class _RecipePageState extends State<RecipePage> {
               ],
             ),
             const SizedBox(height: 10),
+            const Divider(indent: 10, endIndent: 10),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
