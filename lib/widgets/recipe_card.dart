@@ -19,8 +19,7 @@ class RecipeCard extends StatelessWidget {
           ),
         );
       },
-      child:
-      Card(
+      child: Card(
         child: Column(
           children: <Widget>[
             ClipRRect(

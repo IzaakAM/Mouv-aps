@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mouv_aps/models/session.dart';
 
+import 'SessionPage.dart';
+
 class TrainingPage extends StatefulWidget {
   const TrainingPage({super.key});
 
@@ -50,14 +52,18 @@ class SessionGrid extends StatelessWidget {
     sessions = List.generate(
         3,
         (index) => Session(
-              title: "Session $index",
-              duration: 30,
-              videoUrl: "",
-              thumbnailUrl:
-                  "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-              isLocked: index == 2,
-              isFinished: index == 0,
-            ));
+                title: "Session $index",
+                duration: 30,
+                videoUrl: "",
+                thumbnailUrl:
+                    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+                isLocked: index == 2,
+                isFinished: index == 0,
+                steps: [
+                  "Step 1",
+                  "Step 2",
+                  "Step 3",
+                ]));
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -81,7 +87,35 @@ class SessionPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return GestureDetector(
+      onTap: () {
+        if (!session.isLocked && !session.isFinished) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SessionPage(session: session),
+            ),
+          );
+        }
+        else if (session.isFinished) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text("Cette session est déjà terminée."),
+            ),
+          );
+        }
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text("Cette session est verrouillée."),
+            ),
+          );
+        }
+      },
+    child:
+      Column(
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(8),
@@ -90,7 +124,9 @@ class SessionPreview extends StatelessWidget {
               AspectRatio(
                 aspectRatio: 4 / 3,
                 child: Image.network(
-                  colorBlendMode: (session.isFinished || session.isLocked) ? BlendMode.darken : BlendMode.dst,
+                  colorBlendMode: (session.isFinished || session.isLocked)
+                      ? BlendMode.darken
+                      : BlendMode.dst,
                   color: Colors.black.withOpacity(0.4),
                   session.thumbnailUrl,
                   fit: BoxFit.cover,
@@ -102,7 +138,9 @@ class SessionPreview extends StatelessWidget {
                 child: Icon(
                   session.isLocked
                       ? Icons.lock
-                      : (session.isFinished ? Icons.check_circle : Icons.play_circle_fill),
+                      : (session.isFinished
+                          ? Icons.check_circle
+                          : Icons.play_circle_fill),
                   color: Colors.white,
                   size: 36,
                 ),
@@ -110,7 +148,6 @@ class SessionPreview extends StatelessWidget {
             ],
           ),
         ),
-
         Text(
           session.title,
           style: GoogleFonts.lato(
@@ -134,6 +171,7 @@ class SessionPreview extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
       ],
+    )
     );
   }
 }

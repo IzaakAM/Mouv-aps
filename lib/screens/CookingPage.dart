@@ -52,10 +52,10 @@ class RecipeView extends StatelessWidget {
           Text(
             meals[meal]!,
             style: GoogleFonts.oswald(
-              textStyle: const TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
+              textStyle: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontSize: 30,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -64,38 +64,47 @@ class RecipeView extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: <Widget>[
-                RecipeCard(recipe: Recipe(
-                    id: 1,
-                    title: 'Recipe 1',
-                    videoUrl: 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
-                    requiredPoints: 10,
-                    duration: 20,
-                    meal: meal,
-                    ingredients: {'ingredient1': 1},
-                    steps: ['step1', 'step2'],
-                    thumbnailUrl: 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'),
+                RecipeCard(
+                  recipe: Recipe(
+                      id: 1,
+                      title: 'Recipe 1',
+                      videoUrl:
+                          'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+                      requiredPoints: 10,
+                      duration: 20,
+                      meal: meal,
+                      ingredients: {'ingredient1': 1},
+                      steps: ['step1', 'step2'],
+                      thumbnailUrl:
+                          'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'),
                 ),
-                RecipeCard(recipe: Recipe(
-                    id: 2,
-                    title: 'Recipe 2',
-                    videoUrl: 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
-                    requiredPoints: 10,
-                    duration: 20,
-                    meal: meal,
-                    ingredients: {'ingredient1': 1},
-                    steps: ['step1', 'step2'],
-                    thumbnailUrl: 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'),
+                RecipeCard(
+                  recipe: Recipe(
+                      id: 2,
+                      title: 'Recipe 2',
+                      videoUrl:
+                          'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+                      requiredPoints: 10,
+                      duration: 20,
+                      meal: meal,
+                      ingredients: {'ingredient1': 1},
+                      steps: ['step1', 'step2'],
+                      thumbnailUrl:
+                          'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'),
                 ),
-                RecipeCard(recipe: Recipe(
-                    id: 3,
-                    title: 'Recipe 3',
-                    videoUrl: 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
-                    requiredPoints: 10,
-                    duration: 20,
-                    meal: meal,
-                    ingredients: {'ingredient1': 1},
-                    steps: ['step1', 'step2'],
-                    thumbnailUrl: 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'),
+                RecipeCard(
+                  recipe: Recipe(
+                      id: 3,
+                      title: 'Recipe 3',
+                      videoUrl:
+                          'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+                      requiredPoints: 10,
+                      duration: 20,
+                      meal: meal,
+                      ingredients: {'ingredient1': 1},
+                      steps: ['step1', 'step2'],
+                      thumbnailUrl:
+                          'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'),
                 ),
                 IconButton(
                   icon: const Icon(Icons.arrow_circle_right_rounded, size: 50),
