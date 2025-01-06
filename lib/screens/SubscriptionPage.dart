@@ -22,6 +22,7 @@ class AbonnementsPage extends StatelessWidget {
             children: [
               _buildSection(
                 "Mouv'APeat",
+                "Programme sportif & alimentaire",
                 [
                   _buildSubscriptionTile("Abonnement Mensuel", "14€ / mois"),
                   _buildSubscriptionTile("Abonnement Trimestriel", "36€ (12€/mois)"),
@@ -32,6 +33,7 @@ class AbonnementsPage extends StatelessWidget {
               const SizedBox(height: 15),
               _buildSection(
                 "Mouv'APA",
+                "Programme sportif",
                 [
                   _buildSubscriptionTile("Abonnement Mensuel", "8€ / mois"),
                   _buildSubscriptionTile("Abonnement Trimestriel", "21€ (7€/mois)"),
@@ -42,6 +44,7 @@ class AbonnementsPage extends StatelessWidget {
               const SizedBox(height: 15),
               _buildSection(
                 "Mouv'EAT",
+                "Programme alimentaire",
                 [
                   _buildSubscriptionTile("Abonnement Mensuel", "8€ / mois"),
                   _buildSubscriptionTile("Abonnement Trimestriel", "21€ (7€/mois)"),
@@ -57,55 +60,71 @@ class AbonnementsPage extends StatelessWidget {
   }
 
   // Build Section with Title and Tiles
-  Widget _buildSection(String title, List<Widget> tiles) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.blueAccent,
+  Widget _buildSection(String title, String subtitle, List<Widget> tiles) {
+    return StatefulBuilder(builder: (context, setState) {
+      return Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        color: Theme.of(context).colorScheme.surface,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
-            ),
-            const Divider(),
-            ...tiles,
-          ],
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                ),
+              ),
+              Divider(color: Theme.of(context).colorScheme.primary),
+              ...tiles,
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   // Build Compact Subscription Tile
   Widget _buildSubscriptionTile(String title, String price) {
-    return ListTile(
+    return StatefulBuilder(builder: (context, setState) {
+      return ListTile(
       contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-      leading: const Icon(Icons.subscriptions, color: Colors.blueAccent),
+      leading: Icon(
+          Icons.subscriptions,
+          color: Theme.of(context).colorScheme.primary,
+        ),
       title: Text(
         title,
         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
       subtitle: Text(
         price,
-        style: const TextStyle(fontSize: 14, color: Colors.grey),
+        style: TextStyle(
+            fontSize: 14,
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
       ),
       trailing: ElevatedButton(
         onPressed: () {
           // TODO: Implement Subscription Logic
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child: const Text("S'abonner", style: TextStyle(color: Colors.white)),
       ),
     );
+    });
   }
 }

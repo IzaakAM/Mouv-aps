@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:mouv_aps/colors/GlobalThemeData.dart';
 import 'package:mouv_aps/widgets/PagesView.dart';
-import 'package:mouv_aps/screens/profil.dart';
+import 'package:mouv_aps/screens/ProfilePage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

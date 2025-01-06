@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'abonnements_page.dart';
+import 'SubscriptionPage.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -95,7 +95,8 @@ final Map<String, Color> _etatColors = {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontSize: 14),
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
           ),
           const SizedBox(height: 10),
           Text(
@@ -111,17 +112,21 @@ final Map<String, Color> _etatColors = {
   // List Tile for Navigation
   Widget _buildListTile(IconData icon, String title, String subtitle) {
     return ListTile(
-      leading: Icon(icon, color: Colors.white),
+      leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
       title: Text(
         title,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
       ),
       subtitle: Text(
         subtitle,
-        style: const TextStyle(color: Colors.grey),
+        style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
       ),
       trailing:
-          const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+          Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Theme.of(context).colorScheme.primary),
       onTap: () {
         // TODO: Add Navigation Logic
       },
@@ -132,13 +137,25 @@ final Map<String, Color> _etatColors = {
 DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
 
  Widget _buildCalendarSection() {
-    List<Map<String, dynamic>> _weekDays = _generateWeekDays(_currentWeekStart);
+    List<Map<String, dynamic>> weekDays = _generateWeekDays(_currentWeekStart);
 
     return StatefulBuilder(
       builder: (context, setState) {
         return Container(
           padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(15)),
+          decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              border: Border.all(color: Theme.of(context).colorScheme.primary),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+          ),
+
           child: Column(
             children: [
               // Header with Week Navigation
@@ -146,24 +163,33 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_left, color: Colors.white),
+                    icon: Icon(
+                        Icons.arrow_left,
+                        color: Theme.of(context).colorScheme.onSurface),
                     onPressed: () {
                       setState(() {
-                        _currentWeekStart = _currentWeekStart.subtract(const Duration(days: 7));
-                        _weekDays = _generateWeekDays(_currentWeekStart);
+                        _currentWeekStart = _currentWeekStart.subtract(
+                            const Duration(days: 7));
+                        weekDays = _generateWeekDays(_currentWeekStart);
                       });
                     },
                   ),
                   Text(
-                    "${_getMonthName(_currentWeekStart.month)}",
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                    _getMonthName(_currentWeekStart.month),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurface),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.arrow_right, color: Colors.white),
+                    icon: Icon(
+                        Icons.arrow_right,
+                        color: Theme.of(context).colorScheme.onSurface),
                     onPressed: () {
                       setState(() {
-                        _currentWeekStart = _currentWeekStart.add(const Duration(days: 7));
-                        _weekDays = _generateWeekDays(_currentWeekStart);
+                        _currentWeekStart = _currentWeekStart.add(
+                            const Duration(days: 7));
+                        weekDays = _generateWeekDays(_currentWeekStart);
                       });
                     },
                   ),
@@ -171,13 +197,15 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
               ),
               const SizedBox(height: 10),
               // Week Day Rows
-              ..._weekDays.map((day) {
+              ...weekDays.map((day) {
                 return Container(
                   margin: const EdgeInsets.symmetric(vertical: 8),
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8, horizontal: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white10,
                     borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                        color: Theme.of(context).colorScheme.primary.withOpacity(0.2)),
                   ),
                   child: Row(
                     children: [
@@ -186,7 +214,9 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
                         flex: 3,
                         child: Text(
                           day["day"] as String,
-                          style: const TextStyle(color: Colors.white, fontSize: 14),
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontSize: 14),
                         ),
                       ),
                       // Dropdown for Activity
@@ -197,7 +227,9 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
                             value: day["activity"] as String? ?? "Repos",
                             dropdownColor: Colors.black,
                             underline: const SizedBox(),
-                            icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
+                            icon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Theme.of(context).colorScheme.onSurface),
                             items: _activities.map((String activity) {
                               return DropdownMenuItem<String>(
                                 value: activity,
@@ -253,9 +285,6 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
   }
 
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -298,11 +327,11 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
-                    color: Colors.blueAccent,
+                    color: Theme.of(context).colorScheme.primary,
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.blueAccent.withOpacity(0.4),
+                        color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
