@@ -290,11 +290,13 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-        titleTextStyle: const TextStyle(
-            color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
+        titleTextStyle: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            fontSize: 20,
+            fontWeight: FontWeight.bold),
       ),
       body: SingleChildScrollView(
         child: Padding(
