@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'SubscriptionPage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -289,14 +290,14 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile"),
+        title: Text("Profil"),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
-        titleTextStyle: TextStyle(
+        titleTextStyle: GoogleFonts.oswald(
             color: Theme.of(context).colorScheme.primary,
-            fontSize: 20,
-            fontWeight: FontWeight.bold),
+            fontSize: 30,
+            fontWeight: FontWeight.w500),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -309,10 +310,15 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
                 backgroundImage: AssetImage('assets/avatar.png'),
               ),
               const SizedBox(height: 10),
-              const Text(
-                "Rania Badi",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              Text(
+                  "Rania Badi",
+                  style:GoogleFonts.oswald(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
               ),
+
               // Abonnement Button
               const SizedBox(height: 10),
               GestureDetector(
@@ -339,9 +345,9 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
                       ),
                     ],
                   ),
-                  child: const Text(
+                  child:  Text(
                     "Abonnement : Premium",
-                    style: TextStyle(
+                    style: GoogleFonts.oswald(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -369,9 +375,9 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
                   "Détails des problèmes de santé"),
               const SizedBox(height: 20),
               // Calendar Section
-              const Text(
+              Text(
                 "Calendrier d'Activités",
-                style: TextStyle(
+                style: GoogleFonts.oswald(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),

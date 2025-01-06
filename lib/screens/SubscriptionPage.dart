@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AbonnementsPage extends StatelessWidget {
   const AbonnementsPage({Key? key}) : super(key: key);
@@ -10,9 +11,10 @@ class AbonnementsPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(
           "Abonnements",
-          style: TextStyle(
+          style: GoogleFonts.oswald(
               color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.bold),
+              fontSize: 30,
+            fontWeight: FontWeight.w500),
         ),
         iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
       ),
@@ -75,7 +77,7 @@ class AbonnementsPage extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: TextStyle(
+                style: GoogleFonts.oswald(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.primary,
