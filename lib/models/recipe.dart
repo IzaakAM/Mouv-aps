@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 class Recipe {
   final int id;
   final String title;

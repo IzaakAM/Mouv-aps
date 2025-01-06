@@ -177,7 +177,7 @@
     },
     {
       "name": "path_provider_android",
-      "rootUri": "file:///C:/Users/Rania/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_android-2.2.15",
+      "rootUri": "file:///home/zatomos/.pub-cache/hosted/pub.dev/path_provider_android-2.2.14",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
@@ -326,7 +326,7 @@
       "languageVersion": "3.5"
     }
   ],
-  "generated": "2025-01-06T14:53:02.945836Z",
+  "generated": "2024-12-17T17:12:36.239643Z",
   "generator": "pub",
   "generatorVersion": "3.6.0",
   "flutterRoot": "file:///C:/flutter",

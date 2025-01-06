@@ -2,26 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 
-import '../models/recipe.dart';
+import '../models/session.dart';
 import '../widgets/videoplayer.dart';
 
-class RecipePage extends StatefulWidget {
-  const RecipePage({super.key, required this.recipe});
+class SessionPage extends StatefulWidget {
+  const SessionPage({super.key, required this.session});
 
-  final Recipe recipe;
+  final Session session;
 
   @override
-  State<RecipePage> createState() => _RecipePageState();
+  State<SessionPage> createState() => _SessionPageState();
 }
 
-class _RecipePageState extends State<RecipePage> {
+class _SessionPageState extends State<SessionPage> {
   late VideoPlayerController _controller;
 
   @override
   void initState() {
     super.initState();
     _controller =
-        VideoPlayerController.networkUrl(Uri.parse(widget.recipe.videoUrl))
+        VideoPlayerController.networkUrl(Uri.parse(widget.session.videoUrl))
           ..initialize().then((_) {
             setState(() {});
           });
@@ -37,7 +37,7 @@ class _RecipePageState extends State<RecipePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.recipe.title,
+        title: Text(widget.session.title,
             style: GoogleFonts.oswald(
               textStyle: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
@@ -50,14 +50,13 @@ class _RecipePageState extends State<RecipePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            VideoPlayerWidget(videoUrl: widget.recipe.videoUrl),
-            const SizedBox(height: 10),
+            VideoPlayerWidget(videoUrl: widget.session.videoUrl),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(Icons.access_time),
                 const SizedBox(width: 10),
-                Text('${widget.recipe.duration} minutes',
+                Text('${widget.session.duration} minutes',
                     style: GoogleFonts.lato(
                       textStyle: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface,
@@ -75,17 +74,6 @@ class _RecipePageState extends State<RecipePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Ingrédients:',
-                    style: GoogleFonts.oswald(
-                      textStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  IngredientList(ingredients: widget.recipe.ingredients),
                   const SizedBox(height: 10),
                   Text(
                     'Instructions:',
@@ -97,31 +85,13 @@ class _RecipePageState extends State<RecipePage> {
                       ),
                     ),
                   ),
-                  StepList(steps: widget.recipe.steps),
+                  StepList(steps: widget.session.steps),
                 ],
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class IngredientList extends StatelessWidget {
-  const IngredientList({Key? key, required this.ingredients}) : super(key: key);
-
-  final Map<String, int> ingredients;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: ingredients.entries
-          .map((entry) => ListTile(
-                title: Text(entry.key),
-                trailing: Text(entry.value.toString()),
-              ))
-          .toList(),
     );
   }
 }

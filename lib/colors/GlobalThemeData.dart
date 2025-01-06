@@ -31,8 +31,8 @@ class GlobalThemeData {
     onSecondary: Color(0xff90d0ff),
     error: Colors.redAccent,
     onError: Colors.white,
-    surface: Colors.black54,
-    surfaceTint: Color(0xFF303030),
+    surface: Color(0xff252525),
+    surfaceTint: Color(0xFF1B1B1B),
     onSurface: Color(0xffe1e1e1),
     brightness: Brightness.dark,
   );

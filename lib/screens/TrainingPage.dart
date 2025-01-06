@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mouv_aps/models/session.dart';
 
+import 'SessionPage.dart';
+
 class TrainingPage extends StatefulWidget {
   const TrainingPage({super.key});
 
@@ -50,20 +52,23 @@ class SessionGrid extends StatelessWidget {
     sessions = List.generate(
         3,
         (index) => Session(
-              title: "Session $index",
-              duration: 30,
-              videoUrl: "",
-              thumbnailUrl:
-                  "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-              isLocked: index == 2,
-              isFinished: index == 0,
-            ));
+                title: "Session $index",
+                duration: 30,
+                videoUrl: "",
+                thumbnailUrl:
+                    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+                isLocked: index == 2,
+                isFinished: index == 0,
+                steps: [
+                  "Step 1",
+                  "Step 2",
+                  "Step 3",
+                ]));
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 20,
         childAspectRatio: 0.8,
       ),
       itemBuilder: (context, index) {
@@ -81,59 +86,89 @@ class SessionPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Stack(
+    return GestureDetector(
+      onTap: () {
+        if (!session.isLocked && !session.isFinished) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SessionPage(session: session),
+            ),
+          );
+        }
+        else if (session.isFinished) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text("Cette session est déjà terminée."),
+            ),
+          );
+        }
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text("Cette session est verrouillée."),
+            ),
+          );
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.primary,
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+              blurRadius: 8,
+            ),
+          ],
+        ),
+        child: Column(
+          children: <Widget>[
+            Stack(
             children: [
-              AspectRatio(
-                aspectRatio: 4 / 3,
-                child: Image.network(
-                  colorBlendMode: (session.isFinished || session.isLocked) ? BlendMode.darken : BlendMode.dst,
-                  color: Colors.black.withOpacity(0.4),
-                  session.thumbnailUrl,
-                  fit: BoxFit.cover,
-                ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(9),
+              child: Image.network(
+                color: Colors.black.withOpacity(0.4),
+                colorBlendMode: (session.isFinished || session.isLocked)
+                    ? BlendMode.darken
+                    : BlendMode.dst,
+                session.thumbnailUrl,
+                fit: BoxFit.cover,
               ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Icon(
-                  session.isLocked
-                      ? Icons.lock
-                      : (session.isFinished ? Icons.check_circle : Icons.play_circle_fill),
-                  color: Colors.white,
-                  size: 36,
-                ),
+            ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: session.isLocked
+                  ? const Icon(Icons.lock)
+                  : session.isFinished
+                      ? const Icon(Icons.check)
+                      : const SizedBox(),
+            ),
+          ],
+        ),
+            const SizedBox(height: 10),
+            Text(
+              session.title,
+              style: const TextStyle(
+                fontSize: 16,
               ),
-            ],
-          ),
-        ),
-
-        Text(
-          session.title,
-          style: GoogleFonts.lato(
-            textStyle: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
             ),
-          ),
-          textAlign: TextAlign.center,
-        ),
-        Text(
-          "${session.duration} min",
-          style: GoogleFonts.lato(
-            textStyle: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
+            const SizedBox(height: 10),
+            Text(
+              "${session.duration} minutes",
             ),
-          ),
-          textAlign: TextAlign.center,
+          ],
         ),
-      ],
+      ),
     );
   }
 }

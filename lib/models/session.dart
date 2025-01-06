@@ -5,6 +5,7 @@ class Session {
   final int duration;
   bool isFinished = false;
   bool isLocked = false;
+  final List<String> steps;
 
   Session({
     required this.title,
@@ -13,5 +14,6 @@ class Session {
     required this.duration,
     this.isFinished = false,
     this.isLocked = false,
+    required this.steps,
   });
 }
