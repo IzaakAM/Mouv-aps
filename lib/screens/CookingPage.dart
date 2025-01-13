@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:mouv_aps/models/recipe.dart';
 import 'package:mouv_aps/screens/AllRecipesPage.dart';
 import 'package:mouv_aps/widgets/recipe_card.dart';
