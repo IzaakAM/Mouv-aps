@@ -16,6 +16,7 @@ class SessionPage extends StatefulWidget {
 
 class _SessionPageState extends State<SessionPage> {
   late VideoPlayerController _controller;
+  bool _isVideoFinished = false;
 
   @override
   void initState() {
@@ -33,6 +34,26 @@ class _SessionPageState extends State<SessionPage> {
     super.dispose();
   }
 
+  void finishPopUp() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Félicitations'),
+          content: const Text('Vous avez terminé cette session !'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.popUntil(context, ModalRoute.withName('/'));
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,16 +66,47 @@ class _SessionPageState extends State<SessionPage> {
                 fontWeight: FontWeight.w500,
               ),
             )),
+        // Icon
+        actions: [
+          IconButton(
+              icon: const Icon(Icons.check),
+              color: _isVideoFinished
+                  ? Theme.of(context).colorScheme.onSurface
+                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+              onPressed: () {
+                if (_isVideoFinished) {
+                  finishPopUp();
+                }
+              }),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            VideoPlayerWidget(videoUrl: widget.session.videoUrl),
+            VideoPlayerWidget(
+                videoUrl: widget.session.videoUrl,
+                onVideoFinished: () {
+                  setState(() {
+                    _isVideoFinished = true;
+                  });
+                }),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.access_time),
+                const Icon(Icons.checklist_rounded),
+                const SizedBox(width: 10),
+                Text('${widget.session.steps.length} exercices',
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    )),
+                const SizedBox(width: 20),
+                const Icon(Icons.hourglass_empty_rounded),
                 const SizedBox(width: 10),
                 Text('${widget.session.duration} minutes',
                     style: GoogleFonts.lato(
@@ -76,7 +128,7 @@ class _SessionPageState extends State<SessionPage> {
                 children: [
                   const SizedBox(height: 10),
                   Text(
-                    'Instructions:',
+                    'Étapes :',
                     style: GoogleFonts.oswald(
                       textStyle: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface,

@@ -16,7 +16,7 @@ class _TrainingPageState extends State<TrainingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,13 +31,47 @@ class _TrainingPageState extends State<TrainingPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               ClipRect(child: SessionGrid()),
               const SizedBox(height: 20),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class warningPopUp extends StatelessWidget {
+  final Session session;
+
+  const warningPopUp({super.key, required this.session});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Attention'),
+      content: const Text('Cette session a déjà été terminée. Elle ne rapportera pas de points.'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Annuler', style: TextStyle(color: Colors.redAccent)),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context); // Pop the warning dialog
+            Navigator.push( // Navigate to the session page
+              context,
+              MaterialPageRoute(
+                builder: (context) => SessionPage(session: session),
+              ),
+            );
+          },
+          child: const Text('Consulter'),
+        ),
+      ],
     );
   }
 }
@@ -54,7 +88,7 @@ class SessionGrid extends StatelessWidget {
         (index) => Session(
                 title: "Session $index",
                 duration: 30,
-                videoUrl: "",
+                videoUrl: "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
                 thumbnailUrl:
                     "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
                 isLocked: index == 2,
@@ -97,11 +131,11 @@ class SessionPreview extends StatelessWidget {
           );
         }
         else if (session.isFinished) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              duration: Duration(seconds: 2),
-              content: Text("Cette session est déjà terminée."),
-            ),
+          showDialog(
+            context: context,
+            builder: (context) {
+              return warningPopUp(session: session);
+            },
           );
         }
         else {

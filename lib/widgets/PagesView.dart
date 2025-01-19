@@ -22,11 +22,6 @@ class _PagesViewState extends State<PagesView> {
   PageController pageController = PageController(initialPage: 0);
 
   final List<Widget> pages = [
-    const HomePage(),
-    const TrainingPage(),
-    const CookingPage(),
-    const EducationalPage(),
-    const ChatPage()
   ];
 
   final List<String> pageTitles = [
@@ -36,6 +31,18 @@ class _PagesViewState extends State<PagesView> {
     'Éducation',
     'Chat',
   ];
+
+  @override
+  void initState() {
+    pages.addAll([
+      HomePage(pageController: pageController),
+      const TrainingPage(),
+      const CookingPage(),
+      const EducationalPage(),
+      const ChatPage(),
+    ]);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
