@@ -1,0 +1,112 @@
+{
+  "categories": [
+    {
+      "name": "Fonctionnalité",
+      "questions": [
+        {
+          "question": "Me déconnecter de l'application",
+          "response": "Cliquer sur le profil et sur \u00ab d\u00e9connecter \u00bb."
+        },
+        {
+          "question": "R\u00e9silier mon abonnement",
+          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab r\u00e9silier mon abonnement \u00bb."
+        },
+        {
+          "question": "Changer mon abonnement",
+          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab abonnement \u00bb."
+        },
+        {
+          "question": "R\u00e9initialiser mon mot de passe",
+          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab r\u00e9initialiser mon mot de passe \u00bb."
+        },
+        {
+          "question": "Modifier le nom d'utilisateur",
+          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab modifier le nom d'utilisateur \u00bb."
+        },
+        {
+          "question": "Modifier mes informations personnelles",
+          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab informations personnelles \u00bb."
+        }
+      ]
+    },
+    {
+      "name": "Sant\u00e9",
+      "questions": [
+        {
+          "question": "Est-ce normal de ressentir des douleurs apr\u00e8s une s\u00e9ance ?",
+          "follow_up": [
+            {
+              "question": "Combien de temps durent-t-elles ?",
+              "options": ["24h", "48h", "72h", "plus", "je ne sais pas"]
+            },
+            {
+              "question": "Est-ce des douleurs :",
+              "options": ["articulaires", "osseuses", "musculaires", "je ne sais pas"]
+            },
+            {
+              "question": "Quelle est la localisation de la douleur ?",
+              "options": ["t\u00eate", "membres sup\u00e9rieurs", "membres inf\u00e9rieurs", "dos", "sangle abdominale", "thorax", "cou", "pieds"]
+            },
+            {
+              "question": "Est-ce des douleurs fr\u00e9quentes ?",
+              "options": ["quelque fois dans la journ\u00e9e", "constamment", "constamment m\u00eame la nuit", "1 seule fois depuis la derni\u00e8re s\u00e9ance", "je ne sais pas"]
+            },
+            {
+              "question": "Quelle est l'intensit\u00e9 de la douleur ?",
+              "options": ["faible", "mod\u00e9r\u00e9e", "intense"],
+              "scale": {
+                "0": "pas de douleur",
+                "1": "douleur faible",
+                "2": "douleur mod\u00e9r\u00e9e",
+                "3": "douleur intense",
+                "4": "douleur insupportable"
+              }
+            }
+          ]
+        },
+        {
+          "question": "Mon \u00e9tat de sant\u00e9 a \u00e9volu\u00e9, o\u00f9 dois-je le mentionner ?",
+          "response": "Dans \u00ab param\u00e8tre \u00bb, \u00ab mes informations personnelles \u00bb."
+        },
+        {
+          "question": "Contacter le professionnel de santé",
+          "response": "Dans le \u00ab chat \u00bb."
+        }
+      ]
+    },
+    {
+      "name": "Sport",
+      "questions": [
+        {
+          "question": "Je souhaiterais modifier mon programme",
+          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab programme sport \u00bb, \u00ab modifier \u00bb, rdv t\u00e9l\u00e9phonique ou en visio, affichage des disponibilit\u00e9s de rdv (comme dans doctolib)."
+        },
+        {
+          "question": "Mes objectifs sportifs ont chang\u00e9",
+          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab programme sport \u00bb, \u00ab modifier \u00bb, \u00ab objectifs/attentes \u00bb, rdv t\u00e9l\u00e9phonique ou en visio, affichage des disponibilit\u00e9s de rdv de la coach (comme dans doctolib)."
+        },
+        {
+          "question": "Contacter la coach",
+          "response": "Dans le \u00ab chat \u00bb."
+        }
+      ]
+    },
+    {
+      "name": "Nutrition",
+      "questions": [
+        {
+          "question": "Je souhaiterais modifier mon programme",
+          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab programme alimentaire \u00bb, \u00ab modifier \u00bb, rdv t\u00e9l\u00e9phonique ou en visio, affichage des disponibilit\u00e9s de rdv."
+        },
+        {
+          "question": "Mon r\u00e9gime alimentaire a chang\u00e9",
+          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab programme alimentaire \u00bb, \u00ab modifier \u00bb, \u00ab r\u00e9gime alimentaire \u00bb, rdv t\u00e9l\u00e9phonique ou en visio, affichage des disponibilit\u00e9s de rdv de la nutritionniste."
+        },
+        {
+          "question": "Contacter la di\u00e9t\u00e9ticienne ?",
+          "response": "Dans le \u00ab chat \u00bb."
+        }
+      ]
+    }
+  ]
+}
