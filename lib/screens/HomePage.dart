@@ -117,7 +117,10 @@ class NextActivityView extends StatelessWidget {
                 Stack(
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(9),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(9),
+                        topRight: Radius.circular(9),
+                      ),
                       child: Image.network(
                         session.thumbnailUrl,
                         fit: BoxFit.cover,

@@ -103,7 +103,7 @@ class SessionGrid extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.8,
+        childAspectRatio: 0.72,
       ),
       itemBuilder: (context, index) {
         return SessionPreview(session: sessions[index]);
@@ -168,7 +168,10 @@ class SessionPreview extends StatelessWidget {
             Stack(
             children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(9),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(9),
+                topRight: Radius.circular(9),
+              ),
               child: Image.network(
                 color: Colors.black.withOpacity(0.4),
                 colorBlendMode: (session.isFinished || session.isLocked)
@@ -197,8 +200,22 @@ class SessionPreview extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            Text(
-              "${session.duration} minutes",
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.checklist_rounded),
+                const SizedBox(width: 10),
+                Text("${session.steps.length} exercices")
+              ],
+            ),
+            const SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.hourglass_empty_rounded),
+                const SizedBox(width: 10),
+                Text("${session.duration} minutes")
+              ],
             ),
           ],
         ),

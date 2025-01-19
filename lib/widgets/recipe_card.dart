@@ -38,7 +38,9 @@ class RecipeCard extends StatelessWidget {
         child: Column(
           children: <Widget>[
             ClipRRect(
-              borderRadius: BorderRadius.circular(9),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(9),
+                topRight: Radius.circular(9)),
               child: Image.network(
                 recipe.thumbnailUrl,
                 width: 150,
