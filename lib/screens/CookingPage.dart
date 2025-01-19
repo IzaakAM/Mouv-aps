@@ -43,8 +43,8 @@ class RecipeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8.0),
-      margin: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 0, 0),
+      margin: const EdgeInsets.fromLTRB(8.0, 8.0, 0, 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -106,7 +106,10 @@ class RecipeView extends StatelessWidget {
                           'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.arrow_circle_right_outlined, size: 40),
+                  icon: Icon(
+                      Icons.arrow_circle_right_outlined,
+                      size: 40,
+                      color: Theme.of(context).colorScheme.primary),
                   onPressed: () {
                     Navigator.push(
                       context,

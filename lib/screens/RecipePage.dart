@@ -55,7 +55,7 @@ class _RecipePageState extends State<RecipePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.access_time),
+                const Icon(Icons.hourglass_empty_rounded),
                 const SizedBox(width: 10),
                 Text('${widget.recipe.duration} minutes',
                     style: GoogleFonts.lato(
