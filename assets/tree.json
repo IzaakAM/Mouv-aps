@@ -5,35 +5,35 @@
       "questions": [
         {
           "question": "Me déconnecter de l'application",
-          "response": "Cliquer sur le profil et sur \u00ab d\u00e9connecter \u00bb."
+          "response": "Cliquer sur le profil et sur « déconnecter »."
         },
         {
-          "question": "R\u00e9silier mon abonnement",
-          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab r\u00e9silier mon abonnement \u00bb."
+          "question": "Résilier mon abonnement",
+          "response": "Allez dans « paramètre », « résilier mon abonnement »."
         },
         {
           "question": "Changer mon abonnement",
-          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab abonnement \u00bb."
+          "response": "Allez dans « paramètre », « abonnement »."
         },
         {
-          "question": "R\u00e9initialiser mon mot de passe",
-          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab r\u00e9initialiser mon mot de passe \u00bb."
+          "question": "Réinitialiser mon mot de passe",
+          "response": "Allez dans « paramètre », « réinitialiser mon mot de passe »."
         },
         {
           "question": "Modifier le nom d'utilisateur",
-          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab modifier le nom d'utilisateur \u00bb."
+          "response": "Allez dans « paramètre », « modifier le nom d'utilisateur »."
         },
         {
           "question": "Modifier mes informations personnelles",
-          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab informations personnelles \u00bb."
+          "response": "Allez dans « paramètre », « informations personnelles »."
         }
       ]
     },
     {
-      "name": "Sant\u00e9",
+      "name": "Santé",
       "questions": [
         {
-          "question": "Est-ce normal de ressentir des douleurs apr\u00e8s une s\u00e9ance ?",
+          "question": "Est-ce normal de ressentir des douleurs après une séance ?",
           "follow_up": [
             {
               "question": "Combien de temps durent-t-elles ?",
@@ -45,19 +45,19 @@
             },
             {
               "question": "Quelle est la localisation de la douleur ?",
-              "options": ["t\u00eate", "membres sup\u00e9rieurs", "membres inf\u00e9rieurs", "dos", "sangle abdominale", "thorax", "cou", "pieds"]
+              "options": ["tête", "membres supérieurs", "membres inférieurs", "dos", "sangle abdominale", "thorax", "cou", "pieds"]
             },
             {
-              "question": "Est-ce des douleurs fr\u00e9quentes ?",
-              "options": ["quelque fois dans la journ\u00e9e", "constamment", "constamment m\u00eame la nuit", "1 seule fois depuis la derni\u00e8re s\u00e9ance", "je ne sais pas"]
+              "question": "Est-ce des douleurs fréquentes ?",
+              "options": ["quelque fois dans la journée", "constamment", "constamment même la nuit", "1 seule fois depuis la dernière séance", "je ne sais pas"]
             },
             {
-              "question": "Quelle est l'intensit\u00e9 de la douleur ?",
-              "options": ["faible", "mod\u00e9r\u00e9e", "intense"],
+              "question": "Quelle est l'intensité de la douleur ?",
+              "options": ["faible", "modérée", "intense"],
               "scale": {
                 "0": "pas de douleur",
                 "1": "douleur faible",
-                "2": "douleur mod\u00e9r\u00e9e",
+                "2": "douleur modérée",
                 "3": "douleur intense",
                 "4": "douleur insupportable"
               }
@@ -65,12 +65,12 @@
           ]
         },
         {
-          "question": "Mon \u00e9tat de sant\u00e9 a \u00e9volu\u00e9, o\u00f9 dois-je le mentionner ?",
-          "response": "Dans \u00ab param\u00e8tre \u00bb, \u00ab mes informations personnelles \u00bb."
+          "question": "Mon état de santé a évolué, où dois-je le mentionner ?",
+          "response": "Dans « paramètre », « mes informations personnelles »."
         },
         {
           "question": "Contacter le professionnel de santé",
-          "response": "Dans le \u00ab chat \u00bb."
+          "response": "Envoyer un message au professionnel de santé."
         }
       ]
     },
@@ -79,15 +79,15 @@
       "questions": [
         {
           "question": "Je souhaiterais modifier mon programme",
-          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab programme sport \u00bb, \u00ab modifier \u00bb, rdv t\u00e9l\u00e9phonique ou en visio, affichage des disponibilit\u00e9s de rdv (comme dans doctolib)."
+          "response": "Allez dans « paramètre », « programme sport », « modifier », rdv téléphonique ou en visio, affichage des disponibilités de rdv (comme dans doctolib)."
         },
         {
-          "question": "Mes objectifs sportifs ont chang\u00e9",
-          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab programme sport \u00bb, \u00ab modifier \u00bb, \u00ab objectifs/attentes \u00bb, rdv t\u00e9l\u00e9phonique ou en visio, affichage des disponibilit\u00e9s de rdv de la coach (comme dans doctolib)."
+          "question": "Mes objectifs sportifs ont changé",
+          "response": "Allez dans « paramètre », « programme sport », « modifier », « objectifs/attentes », rdv téléphonique ou en visio, affichage des disponibilités de rdv de la coach (comme dans doctolib)."
         },
         {
           "question": "Contacter la coach",
-          "response": "Dans le \u00ab chat \u00bb."
+          "response": "Envoyer un message au coach."
         }
       ]
     },
@@ -96,15 +96,15 @@
       "questions": [
         {
           "question": "Je souhaiterais modifier mon programme",
-          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab programme alimentaire \u00bb, \u00ab modifier \u00bb, rdv t\u00e9l\u00e9phonique ou en visio, affichage des disponibilit\u00e9s de rdv."
+          "response": "Allez dans « paramètre », « programme alimentaire », « modifier », rdv téléphonique ou en visio, affichage des disponibilités de rdv."
         },
         {
-          "question": "Mon r\u00e9gime alimentaire a chang\u00e9",
-          "response": "Allez dans \u00ab param\u00e8tre \u00bb, \u00ab programme alimentaire \u00bb, \u00ab modifier \u00bb, \u00ab r\u00e9gime alimentaire \u00bb, rdv t\u00e9l\u00e9phonique ou en visio, affichage des disponibilit\u00e9s de rdv de la nutritionniste."
+          "question": "Mon régime alimentaire a changé",
+          "response": "Allez dans « paramètre », « programme alimentaire », « modifier », « régime alimentaire », rdv téléphonique ou en visio, affichage des disponibilités de rdv de la nutritionniste."
         },
         {
-          "question": "Contacter la di\u00e9t\u00e9ticienne ?",
-          "response": "Dans le \u00ab chat \u00bb."
+          "question": "Contacter la diététicienne.",
+          "response": "Envoyer un message à la diététicienne."
         }
       ]
     }
