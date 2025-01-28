@@ -88,7 +88,7 @@ class SessionGrid extends StatelessWidget {
         (index) => Session(
                 title: "Session $index",
                 duration: 30,
-                videoUrl: "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+                videoUrl: "https://192.168.72.204:8443/media/videos/Ahsoka.S01E02.Part.Two.1080p.DSNP.WEB-DL.DDP5.1.H.264-NTb.mkv",
                 thumbnailUrl:
                     "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
                 isLocked: index == 2,
