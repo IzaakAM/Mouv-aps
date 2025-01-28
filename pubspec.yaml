@@ -39,6 +39,8 @@ dependencies:
   auto_size_text: ^3.0.0
   google_fonts: ^6.2.1
   video_player: ^2.9.2
+  flutter_secure_storage: ^9.2.4
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:

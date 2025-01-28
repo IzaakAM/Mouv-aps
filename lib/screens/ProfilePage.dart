@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mouv_aps/screens/AuthPage.dart';
 import 'SubscriptionPage.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:mouv_aps/services/secure_storage_service.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -347,6 +350,42 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
                   ),
                   child:  Text(
                     "Abonnement : Premium",
+                    style: GoogleFonts.oswald(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              // Disconnect Button
+              GestureDetector(
+                onTap: () {
+                  SecureStorageService().deleteAll();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AuthPage()
+                    ),
+                  );
+                },
+                child: Container(
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.error,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).colorScheme.error.withOpacity(0.5),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child:  Text(
+                    "Déconnexion",
                     style: GoogleFonts.oswald(
                       color: Colors.white,
                       fontSize: 16,
