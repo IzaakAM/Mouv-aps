@@ -16,13 +16,21 @@ class ApiService {
       'username': username,
       'password': password,
     }));
-    print(username);
-    print(password);
 
     final response = await request.close();
     return response.statusCode == HttpStatus.ok
         ? jsonDecode(await response.transform(utf8.decoder).join())
         : throw Exception('Failed to login');
+  }
+
+  static Future<Map<String, dynamic>> requestGuestToken() async {
+    final uri = Uri.parse('$baseUrl/guest-token/');
+    final request = await _httpClient.getUrl(uri);
+
+    final response = await request.close();
+    return response.statusCode == HttpStatus.ok
+        ? jsonDecode(await response.transform(utf8.decoder).join())
+        : throw Exception('Failed to connect');
   }
 
   static Future<Map<String, dynamic>> register(String username, String email, String password) async {

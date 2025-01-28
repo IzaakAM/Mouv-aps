@@ -83,85 +83,123 @@ class AuthPageState extends State<AuthPage> {
     }
   }
 
+  Future<void> _continueAsGuest() async {
+    try {
+      Map<String, dynamic> response;
+      response = await ApiService.requestGuestToken();
+      String access_token = response['access'];
+      String refresh_token = response['refresh'];
+      await SecureStorageService().save('jwt_access', access_token);
+      await SecureStorageService().save('jwt_refresh', refresh_token);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const PagesView()),
+      );
+    }
+    catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isLogin ? 'Connexion' : 'S\'enregistrer',
-            style: GoogleFonts.oswald(
-                fontSize: 30,
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.w500)),
+        title: Text(
+          isLogin ? 'Connexion' : 'S\'enregistrer',
+          style: GoogleFonts.oswald(
+            fontSize: 30,
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              CustomInputField(
-                  labelText: 'Nom d\'utilisateur',
-                  keyboardType: TextInputType.text,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Veuillez entrer votre nom d\'utilisateur';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    _usernameController.text = value!;
-                  }
-              ),
-              if (!isLogin)
-                CustomInputField(
-                    labelText: 'Email',
-                    keyboardType: TextInputType.text,
-                    controller: _emailController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Veuillez entrer votre adresse mail';
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      _emailController.text = value!;
-                    }
+        child: Column(
+          children: [
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    CustomInputField(
+                      labelText: 'Nom d\'utilisateur',
+                      keyboardType: TextInputType.text,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Veuillez entrer votre nom d\'utilisateur';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        _usernameController.text = value!;
+                      },
+                    ),
+                    if (!isLogin)
+                      CustomInputField(
+                        labelText: 'Email',
+                        keyboardType: TextInputType.text,
+                        controller: _emailController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Veuillez entrer votre adresse mail';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          _emailController.text = value!;
+                        },
+                      ),
+                    CustomInputField(
+                      labelText: 'Mot de passe',
+                      keyboardType: TextInputType.text,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Veuillez entrer votre mot de passe';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        _passwordController.text = value!;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _submit,
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                      ),
+                      child: Text(isLogin ? 'Connexion' : 'Créer un compte'),
+                    ),
+                    const SizedBox(height: 20),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          isLogin = !isLogin;
+                        });
+                      },
+                      child: Text(isLogin
+                          ? 'Pas encore de compte? Créer un compte'
+                          : 'Déjà un compte? Se connecter'),
+                    ),
+                  ],
                 ),
-              CustomInputField(
-                  labelText: 'Mot de passe',
-                  keyboardType: TextInputType.text,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Veuillez entrer votre mot de passe';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    _passwordController.text = value!;
-                  }
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submit,
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
-                child: Text(isLogin ? 'Connexion' : 'Créer un compte'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _continueAsGuest,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.black12,
               ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    isLogin = !isLogin; // Toggle between login and register
-                  });
-                },
-                child: Text(isLogin
-                    ? 'Pas encore de compte? Créer un compte'
-                    : 'Déjà un compte? Se connecter'),
-              ),
-            ],
-          ),
+              child: const Text('Continuer en tant qu\'invité'),
+            ),
+          ],
         ),
       ),
     );
