@@ -62,16 +62,20 @@ class FormPageState extends State<FormPage> {
             actions: [
               TextButton(
                 onPressed: () {
-                  print("Form Submitted: ${userForm.toJson()}");
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                },
-                child: const Text('OK'),
-              ),
-              TextButton(
-                onPressed: () {
                   Navigator.of(context).pop();
                 },
                 child: const Text('Annuler'),
+              ),
+              TextButton(
+                onPressed: () {
+                  print("Form Submitted: ${userForm.toJson()}");
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Formulaire soumis avec succès!')),
+                  );
+                },
+                child: const Text('OK'),
               ),
             ],
           );
@@ -136,8 +140,8 @@ class FormPageState extends State<FormPage> {
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Theme.of(context).colorScheme.primary,
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -145,23 +149,26 @@ class FormPageState extends State<FormPage> {
                     child: const Icon(Icons.chevron_left),
                   ),
                 const SizedBox(width: 16),
-
-            ElevatedButton(
-              onPressed: nextPage,
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Icon(
-                currentPage == totalPages - 1 ? Icons.check : Icons.chevron_right,
-              ),
-            )],
+                ElevatedButton(
+                  onPressed: nextPage,
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Icon(
+                    currentPage == totalPages - 1
+                        ? Icons.check
+                        : Icons.chevron_right,
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
         ],
       ),
     );
