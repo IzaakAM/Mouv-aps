@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="false">
+        <!-- Use your server’s IP or domain here -->
+        <domain includeSubdomains="true">192.168.122.1</domain>
+        <trust-anchors>
+            <!-- Trust user-installed certificate authorities -->
+<!--            <certificates src="user" />-->
+            <!-- Or to embed your certificate directly:-->
+            <certificates src="@raw/my_cert" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>
