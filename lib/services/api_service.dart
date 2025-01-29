@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 class ApiService {
-  static const String baseUrl = 'https://192.168.56.204:8443/api';
+  static const String baseUrl = 'https://192.168.122.1:8443/api';
   static final HttpClient _httpClient = HttpClient()
     ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
 
@@ -52,5 +52,26 @@ class ApiService {
     // display the error message
         : throw Exception(jsonDecode(await response.transform(utf8.decoder)
         .join())["detail"]);
+  }
+
+  static Future<List<Map<String, dynamic>>> fetchSessions(String accessToken) async {
+    final uri = Uri.parse('$baseUrl/sessions/');
+    final request = await _httpClient.getUrl(uri);
+
+    // Add the Bearer token for authentication
+    request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $accessToken');
+
+    final response = await request.close();
+
+    if (response.statusCode == HttpStatus.ok) {
+      // Read response body
+      final responseBody = await response.transform(utf8.decoder).join();
+      final List<dynamic> data = jsonDecode(responseBody);
+
+      // Each item in 'data' is a Map<String, dynamic>
+      return data.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to fetch sessions. Status: ${response.statusCode}');
+    }
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mouv_aps/models/session.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/session_provider.dart';
 import 'SessionPage.dart';
 
 class TrainingPage extends StatefulWidget {
@@ -13,11 +15,25 @@ class TrainingPage extends StatefulWidget {
 
 class _TrainingPageState extends State<TrainingPage> {
   @override
+  void initState() {
+    super.initState();
+    // 1) Trigger the session load on page init
+    final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+    sessionProvider.loadSessions();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final sessionProvider = Provider.of<SessionProvider>(context);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
+        child: sessionProvider.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : sessionProvider.errorMessage.isNotEmpty
+            ? Center(child: Text('Error: ${sessionProvider.errorMessage}'))
+            : SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -32,7 +48,8 @@ class _TrainingPageState extends State<TrainingPage> {
                 ),
               ),
               const SizedBox(height: 10),
-              ClipRect(child: SessionGrid()),
+              // 2) Render the real sessions
+              SessionGrid(sessions: sessionProvider.sessions),
               const SizedBox(height: 20),
             ],
           ),
@@ -41,6 +58,7 @@ class _TrainingPageState extends State<TrainingPage> {
     );
   }
 }
+
 
 class warningPopUp extends StatelessWidget {
   final Session session;
@@ -77,28 +95,28 @@ class warningPopUp extends StatelessWidget {
 }
 
 class SessionGrid extends StatelessWidget {
-  List<Session> sessions;
+  final List<Session> sessions;
 
-  SessionGrid({super.key, this.sessions = const []});
+  const SessionGrid({super.key, this.sessions = const []});
 
   @override
   Widget build(BuildContext context) {
-    sessions = List.generate(
-        3,
-        (index) => Session(
-                title: "Session $index",
-                duration: 30,
-                videoUrl: "https://192.168.72.204:8443/media/videos/Ahsoka.S01E02.Part.Two.1080p.DSNP.WEB-DL.DDP5.1.H.264-NTb.mkv",
-                thumbnailUrl:
-                    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-                isLocked: index == 2,
-                isFinished: index == 0,
-                date: DateTime.now(),
-                steps: [
-                  "Step 1",
-                  "Step 2",
-                  "Step 3",
-                ]));
+    // sessions = List.generate(
+    //     3,
+    //     (index) => Session(
+    //             title: "Session $index",
+    //             duration: 30,
+    //             videoUrl: "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+    //             thumbnailUrl:
+    //                 "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+    //             isLocked: index == 2,
+    //             isFinished: index == 0,
+    //             date: DateTime.now(),
+    //             steps: [
+    //               "Step 1",
+    //               "Step 2",
+    //               "Step 3",
+    //             ]));
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),

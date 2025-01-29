@@ -18,4 +18,19 @@ class Session {
     this.isLocked = false,
     required this.steps,
   });
+
+  factory Session.fromJson(Map<String, dynamic> json) {
+    return Session(
+      title: json["title"] ?? "",
+      duration: json["duration"] ?? 0,
+      videoUrl: json["video_url"] ?? "",
+      thumbnailUrl: json["thumbnail_url"] ?? "",
+      isLocked: json["is_locked"] ?? false,
+      isFinished: json["is_finished"] ?? false,
+      steps: json["steps"] != null
+          ? List<String>.from(json["steps"])
+          : <String>[],
+      date: DateTime.parse(json["date"] ?? DateTime.now().toString()),
+    );
+  }
 }
