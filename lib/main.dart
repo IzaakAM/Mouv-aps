@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:mouv_aps/colors/GlobalThemeData.dart';
-import 'package:mouv_aps/widgets/PagesView.dart';
-import 'package:mouv_aps/screens/ProfilePage.dart';
+import 'package:mouv_aps/screens/AuthPage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       theme: GlobalThemeData.lightThemeData,
       darkTheme: GlobalThemeData.darkThemeData,
-      home: const PagesView()
+      home: const AuthPage(),
     );
   }
 }

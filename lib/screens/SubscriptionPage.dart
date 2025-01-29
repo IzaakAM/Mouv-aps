@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mouv_aps/screens/FormPage.dart';
 
 class AbonnementsPage extends StatelessWidget {
   const AbonnementsPage({Key? key}) : super(key: key);
@@ -120,7 +121,13 @@ class AbonnementsPage extends StatelessWidget {
       ),
       trailing: ElevatedButton(
         onPressed: () {
-          // TODO: Implement Subscription Logic
+          // Push form page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const FormPage(),
+            ),
+          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).colorScheme.primary,
