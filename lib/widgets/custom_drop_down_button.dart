@@ -4,17 +4,19 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 class CustomDropdownButton<T> extends StatelessWidget {
   final String labelText;
   final double width;
-  final T? initialValue;
-  final ValueChanged<T?> onChanged;
+  final T? value;
   final List<DropdownMenuItem<T>> items;
+  final ValueChanged<T?>? onChanged;
+  final FormFieldValidator<T>? validator;
 
   const CustomDropdownButton({
     super.key,
     required this.labelText,
     required this.width,
-    this.initialValue,
-    required this.onChanged,
+    this.value,
     required this.items,
+    this.onChanged,
+    this.validator,
   });
 
   @override
@@ -23,12 +25,13 @@ class CustomDropdownButton<T> extends StatelessWidget {
       padding: const EdgeInsets.all(10.0),
       child: DropdownButtonFormField2<T>(
         decoration: InputDecoration(
-          labelText: labelText,
+          labelText: (validator != null) ? '$labelText*' : labelText,
           border: const OutlineInputBorder(),
         ),
-        value: initialValue,
+        value: value,             // Now called 'value' instead of 'initialValue'
         items: items,
         onChanged: onChanged,
+        validator: validator,     // Pass validator if you need form validation
         dropdownStyleData: DropdownStyleData(
           width: width,
           maxHeight: 300,

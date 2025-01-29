@@ -1,81 +1,40 @@
 import 'package:flutter/material.dart';
 
-class CustomInputField<T> extends StatefulWidget {
+class CustomInputField extends StatelessWidget {
   final String labelText;
-  final String? initialValue;
+  final TextEditingController? controller;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
-  final Function(String?) onChanged;
   final String? hintText;
-  final TextEditingController? controller;
+  final void Function(String?)? onSaved;
 
   const CustomInputField({
-    super.key,
+    Key? key,
     required this.labelText,
-    this.initialValue,
+    this.controller,
     required this.keyboardType,
     this.validator,
-    required this.onChanged,
     this.hintText,
-    this.controller,
-  });
-
-  @override
-  _CustomInputFieldState<T> createState() => _CustomInputFieldState<T>();
-}
-
-class _CustomInputFieldState<T> extends State<CustomInputField<T>> {
-  late TextEditingController _controller = TextEditingController();
-  String? _errorMessage;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = widget.controller ?? TextEditingController();
-    if (widget.initialValue != null) {
-      _controller.text = widget.initialValue!;
-    }
-  }
+    this.onSaved,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              controller: _controller,
-              keyboardType: widget.keyboardType,
-              decoration: InputDecoration(
-                labelText: widget.labelText,
-                hintText: widget.hintText,
-                hintStyle: const TextStyle(color: Colors.grey),
-                border: const OutlineInputBorder(),
-                errorText: _errorMessage,
-              ),
-              onChanged: (value) {
-                if (value.isNotEmpty) {
-                  if (widget.validator != null) {
-                    final error = widget.validator!(value);
-                    setState(() {
-                      _errorMessage = error;
-                    });
-                  }
-                }
-
-                if (_errorMessage == null) {
-                  widget.onChanged(value);
-                }
-              },
-            ),
-          ],
-        ));
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+      // Adjust as needed
+      padding: const EdgeInsets.all(10.0),
+      child: TextFormField(
+        controller: controller,
+        keyboardType: keyboardType,
+        validator: validator,
+        onSaved: onSaved,
+        decoration: InputDecoration(
+          labelText: (validator != null) ? '$labelText*' : labelText,
+          hintText: hintText,
+          hintStyle: const TextStyle(color: Colors.grey),
+          border: const OutlineInputBorder(),
+        ),
+      ),
+    );
   }
 }

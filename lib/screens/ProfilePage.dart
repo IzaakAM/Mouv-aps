@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mouv_aps/screens/AuthPage.dart';
+import '../models/session.dart';
 import 'SubscriptionPage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,74 +14,90 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  // Days with activities and states
-  final List<Map<String, dynamic>> _days = [
-    {"day": "Lundi 15 Janvier", "activity": "Repos", "color": Colors.grey},
-    {"day": "Mardi 16 Janvier", "activity": "Musculation", "color": Colors.green},
-    {"day": "Mercredi 17 Janvier", "activity": "Cours en ligne", "color": Colors.yellow},
-    {"day": "Jeudi 18 Janvier", "activity": "Course", "color": Colors.red},
-    {"day": "Vendredi 19 Janvier", "activity": "Musculation", "color": Colors.green},
-    {"day": "Samedi 20 Janvier", "activity": "Repos", "color": Colors.grey},
-    {"day": "Dimanche 21 Janvier", "activity": "Cours en ligne", "color": Colors.yellow},
-  ];
-
-  // Dropdown options for activity types
-  final List<String> _activities = [
-    "Repos",
-    "Musculation",
-    "Course",
-    "Cours en ligne"
-  ];
-
-  final Map<String, Color> _activityColors = {
-  "Repos": Colors.grey,
-  "Musculation": Colors.green,
-  "Course": Colors.red,
-  "Cours en ligne": Colors.yellow,
-};
-
-final Map<String, Color> _etatColors = {
-  "Normal": Colors.green,
-  "Attention": Colors.yellow,
-  "Critique": Colors.red,
-};
-
+  List<Session> sessions = [
+  Session(
+  title: "Session 1",
+  duration: 30,
+  videoUrl: "https://192.168.72.204:8443/media/videos/Ahsoka.S01E02.Part.Two.1080p.DSNP.WEB-DL.DDP5.1.H.264-NTb.mkv",
+  thumbnailUrl:
+  "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+  date: DateTime.now(),
+  steps: [
+  "Step 1",
+  "Step 2",
+  "Step 3",
+  ]),
+];
+  DateTime _currentMonthStart = DateTime(
+      DateTime.now().year, DateTime.now().month, 1);
 
   // Helper function to get day name from weekday number
   String _getDayName(int weekday) {
-    const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+    const days = [
+      "Lundi",
+      "Mardi",
+      "Mercredi",
+      "Jeudi",
+      "Vendredi",
+      "Samedi",
+      "Dimanche"
+    ];
     return days[weekday - 1];
   }
 
   // Helper function to get month name from month number
   String _getMonthName(int month) {
     const months = [
-      "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-      "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+      "Janvier",
+      "Février",
+      "Mars",
+      "Avril",
+      "Mai",
+      "Juin",
+      "Juillet",
+      "Août",
+      "Septembre",
+      "Octobre",
+      "Novembre",
+      "Décembre"
     ];
     return months[month - 1];
   }
 
-  // Generate week days dynamically
-  List<Map<String, dynamic>> _generateWeekDays(DateTime weekStart) {
-    return List.generate(7, (index) {
-      DateTime date = weekStart.add(Duration(days: index));
-      return {
-        "day": "${_getDayName(date.weekday)} ${date.day} ${_getMonthName(date.month)}",
-        "activity": "Repos",
-        "color": Colors.grey
-      };
+  void _goToPreviousMonth() {
+    setState(() {
+      int prevMonth = _currentMonthStart.month - 1;
+      int prevYear = _currentMonthStart.year;
+      if (prevMonth < 1) {
+        prevMonth = 12;
+        prevYear--;
+      }
+      _currentMonthStart = DateTime(prevYear, prevMonth, 1);
     });
   }
 
-  // Function to handle circle tap
-  void _onCircleTap(Map<String, dynamic> day) {
-    int currentIndex = _activities.indexOf(day["activity"]);
-    int nextIndex = (currentIndex + 1) % _activities.length;
+  void _goToNextMonth() {
     setState(() {
-      day["activity"] = _activities[nextIndex];
-      day["color"] = _activityColors[day["activity"]]!;
+      int nextMonth = _currentMonthStart.month + 1;
+      int nextYear = _currentMonthStart.year;
+      if (nextMonth > 12) {
+        nextMonth = 1;
+        nextYear++;
+      }
+      _currentMonthStart = DateTime(nextYear, nextMonth, 1);
     });
+  }
+
+  Color _evaluateSessionColor(Session session) {
+    print(DateTime.now().difference(session.date).inDays);
+    if (session.isFinished) {
+      return Colors.green.withOpacity(0.5);
+    }
+    else if (DateTime.now().difference(session.date).inDays >= 1) {
+      return Colors.red.withOpacity(0.5);
+    } else {
+      return Colors.orange.withOpacity(0.5);
+    }
   }
 
   // Metric Card for Points and Sessions
@@ -100,7 +117,8 @@ final Map<String, Color> _etatColors = {
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
+                color:
+                    Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
           ),
           const SizedBox(height: 10),
           Text(
@@ -126,168 +144,123 @@ final Map<String, Color> _etatColors = {
         style: TextStyle(
             color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
       ),
-      trailing:
-          Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Theme.of(context).colorScheme.primary),
+      trailing: Icon(Icons.arrow_forward_ios,
+          size: 16, color: Theme.of(context).colorScheme.primary),
       onTap: () {
         // TODO: Add Navigation Logic
       },
     );
   }
 
-  // Calendar Section with dropdown for activity and clickable circles
-DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
-
- Widget _buildCalendarSection() {
-    List<Map<String, dynamic>> weekDays = _generateWeekDays(_currentWeekStart);
-
+  Widget _buildCalendarSection() {
+    List<Session> filteredSessions = sessions
+        .where((session) =>
+            session.date.month == _currentMonthStart.month &&
+            session.date.year == _currentMonthStart.year)
+        .toList();
+    filteredSessions.sort((a, b) => a.date.day.compareTo(b.date.day));
     return StatefulBuilder(
       builder: (context, setState) {
         return Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              border: Border.all(color: Theme.of(context).colorScheme.primary),
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+            color: Theme.of(context).colorScheme.surface,
+            border: Border.all(color: Theme.of(context).colorScheme.primary),
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-
           child: Column(
             children: [
-              // Header with Week Navigation
+              // Header with Month Navigation
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: Icon(
-                        Icons.arrow_left,
+                    icon: Icon(Icons.arrow_left,
                         color: Theme.of(context).colorScheme.onSurface),
                     onPressed: () {
-                      setState(() {
-                        _currentWeekStart = _currentWeekStart.subtract(
-                            const Duration(days: 7));
-                        weekDays = _generateWeekDays(_currentWeekStart);
-                      });
+                      _goToPreviousMonth();
                     },
                   ),
                   Text(
-                    _getMonthName(_currentWeekStart.month),
+                    "${_getMonthName(_currentMonthStart.month)} ${_currentMonthStart.year}",
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.onSurface),
                   ),
                   IconButton(
-                    icon: Icon(
-                        Icons.arrow_right,
+                    icon: Icon(Icons.arrow_right,
                         color: Theme.of(context).colorScheme.onSurface),
                     onPressed: () {
-                      setState(() {
-                        _currentWeekStart = _currentWeekStart.add(
-                            const Duration(days: 7));
-                        weekDays = _generateWeekDays(_currentWeekStart);
-                      });
+                      _goToNextMonth();
                     },
                   ),
                 ],
               ),
               const SizedBox(height: 10),
-              // Week Day Rows
-              ...weekDays.map((day) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8, horizontal: 12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                        color: Theme.of(context).colorScheme.primary.withOpacity(0.2)),
+              // Display activities this month here
+              if (filteredSessions.isEmpty)
+                Text(
+                  'Aucune séance pour ce mois.',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
-                  child: Row(
-                    children: [
-                      // Day Name
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          day["day"] as String,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontSize: 14),
+                )
+              else
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: filteredSessions.length,
+                  itemBuilder: (context, index) {
+                    final session = filteredSessions[index];
+                    final dayName = _getDayName(session.date.weekday);
+                    final dayNumber = session.date.day;
+                    final monthName = _getMonthName(session.date.month);
+
+                    return ListTile(
+                      title: Text(session.title,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
-                      // Dropdown for Activity
-                      Expanded(
-                        flex: 3,
-                        child: Center(
-                          child: DropdownButton<String>(
-                            value: day["activity"] as String? ?? "Repos",
-                            dropdownColor: Colors.black,
-                            underline: const SizedBox(),
-                            icon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Theme.of(context).colorScheme.onSurface),
-                            items: _activities.map((String activity) {
-                              return DropdownMenuItem<String>(
-                                value: activity,
-                                child: Text(activity, style: const TextStyle(color: Colors.white)),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              if (newValue != null) {
-                                setState(() {
-                                  day["activity"] = newValue;
-                                  day["color"] = _activityColors[newValue];
-                                });
-                              }
-                            },
-                          ),
+                      subtitle: Text(
+                        '$dayName $dayNumber $monthName',
+                        style: TextStyle(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.7),
                         ),
                       ),
-                      // Circles for Task Status
-                      Expanded(
-                        flex: 3,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: _etatColors.entries.map((entry) {
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  day["color"] = entry.value;
-                                });
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 4),
-                                child: CircleAvatar(
-                                  radius: 10,
-                                  backgroundColor: entry.value,
-                                  child: day["color"] == entry.value
-                                      ? const Icon(Icons.check, size: 12, color: Colors.black)
-                                      : null,
-                                ),
-                              ),
-                            );
-                          }).toList(),
+                      trailing: Container(
+                        width: 20,
+                        height: 20,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: _evaluateSessionColor(session),
+                          shape: BoxShape.circle,
                         ),
                       ),
-                    ],
-                  ),
-                );
-              }),
+                      onTap: () {
+                        // Could navigate to a SessionDetailPage
+                        // or show a dialog with more info.
+                      },
+                    );
+                  },
+                ),
             ],
           ),
         );
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -296,7 +269,8 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
         title: Text("Profil"),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
-        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
+        iconTheme:
+            IconThemeData(color: Theme.of(context).colorScheme.onSurface),
         titleTextStyle: GoogleFonts.oswald(
             color: Theme.of(context).colorScheme.primary,
             fontSize: 30,
@@ -314,15 +288,15 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
               ),
               const SizedBox(height: 10),
               Text(
-                  "Rania Badi",
-                  style:GoogleFonts.oswald(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                "Rania Badi",
+                style: GoogleFonts.oswald(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
 
-              // Abonnement Button
+              // Subscription Button
               const SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
@@ -342,13 +316,16 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.5),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
                     ],
                   ),
-                  child:  Text(
+                  child: Text(
                     "Abonnement : Premium",
                     style: GoogleFonts.oswald(
                       color: Colors.white,
@@ -364,27 +341,28 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
                   SecureStorageService().deleteAll();
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const AuthPage()
-                    ),
+                    MaterialPageRoute(builder: (context) => const AuthPage()),
                   );
                 },
                 child: Container(
                   padding:
-                  const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.error,
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Theme.of(context).colorScheme.error.withOpacity(0.5),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .error
+                            .withOpacity(0.5),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
                     ],
                   ),
-                  child:  Text(
+                  child: Text(
                     "Déconnexion",
                     style: GoogleFonts.oswald(
                       color: Colors.white,
@@ -408,8 +386,8 @@ DateTime _currentWeekStart = DateTime(2025, 1, 6); // Start week (6 Jan 2025)
               // List Tiles
               _buildListTile(Icons.history, "Historique des séances",
                   "Voir toutes les séances"),
-              _buildListTile(Icons.bar_chart, "Statistiques",
-                  "Progrès cette année"),
+              _buildListTile(
+                  Icons.bar_chart, "Statistiques", "Progrès cette année"),
               _buildListTile(Icons.medical_services, "Pathologie",
                   "Détails des problèmes de santé"),
               const SizedBox(height: 20),

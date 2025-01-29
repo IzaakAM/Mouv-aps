@@ -16,22 +16,36 @@ class FormPage extends StatefulWidget {
 }
 
 class FormPageState extends State<FormPage> {
+  // One key per page
+  final List<GlobalKey<FormState>> formKeys = List.generate(
+    5,
+    (_) => GlobalKey<FormState>(),
+  );
+
   final UserForm userForm = UserForm();
   final PageController _pageController = PageController();
   int currentPage = 0;
   double progress = 0.0;
 
-  // Define the form fields for each page
-  final List<Widget> formPages = [
-    IdentityFormPage(),
-    PersonalDetailsFormPage(),
-    MedicalInfoFormpage(),
-    PhysicalExerciseFormpage(),
-    NutritionFormPage()
-  ];
+  // We'll update the formPages list so each page gets a formKey
+  late final List<Widget> formPages;
 
-  // Define the total number of pages
+  // total number of pages
   final int totalPages = 5;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize pages in initState (or directly inline),
+    // passing the appropriate formKey to each page
+    formPages = [
+      IdentityFormPage(formKey: formKeys[0]),
+      PersonalDetailsFormPage(formKey: formKeys[1]),
+      MedicalInfoFormpage(formKey: formKeys[2]),
+      PhysicalExerciseFormpage(formKey: formKeys[3]),
+      NutritionFormPage(formKey: formKeys[4]),
+    ];
+  }
 
   // Update the progress based on the current page
   void updateProgress() {
@@ -40,8 +54,29 @@ class FormPageState extends State<FormPage> {
     });
   }
 
-  // Move to the next page
+  // Move to the next page IF validation passes
   void nextPage() {
+    final isValid = formKeys[currentPage].currentState!.validate();
+    if (!isValid) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Erreur'),
+              content: const Text('Certains champs sont invalides.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          });
+      return; // do not proceed if invalid
+    }
+    formKeys[currentPage].currentState!.save();
+
+    // If valid and we're NOT on the last page, increment page
     if (currentPage < totalPages - 1) {
       setState(() {
         currentPage++;
@@ -53,7 +88,7 @@ class FormPageState extends State<FormPage> {
       );
       updateProgress();
     } else {
-      // Open pop up
+      // Last page -> show submission dialog
       showDialog(
         context: context,
         builder: (context) {
@@ -61,9 +96,7 @@ class FormPageState extends State<FormPage> {
             title: const Text('Soumettre le formulaire ?'),
             actions: [
               TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+                onPressed: () => Navigator.of(context).pop(),
                 child: const Text('Annuler'),
               ),
               TextButton(
@@ -72,7 +105,8 @@ class FormPageState extends State<FormPage> {
                   Navigator.of(context).popUntil((route) => route.isFirst);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        content: Text('Formulaire soumis avec succès!')),
+                      content: Text('Formulaire soumis avec succès!'),
+                    ),
                   );
                 },
                 child: const Text('OK'),
@@ -84,16 +118,34 @@ class FormPageState extends State<FormPage> {
     }
   }
 
+  // Optional: If going back, no need to validate
+  void previousPage() {
+    if (currentPage > 0) {
+      setState(() {
+        currentPage--;
+      });
+      _pageController.animateToPage(
+        currentPage,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+      updateProgress();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     updateProgress();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Formulaire',
-            style: GoogleFonts.oswald(
-                fontSize: 30,
-                fontWeight: FontWeight.w500,
-                color: Theme.of(context).colorScheme.primary)),
+        title: Text(
+          'Formulaire',
+          style: GoogleFonts.oswald(
+            fontSize: 30,
+            fontWeight: FontWeight.w500,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -103,12 +155,16 @@ class FormPageState extends State<FormPage> {
             minHeight: 8,
             backgroundColor: Theme.of(context).colorScheme.inverseSurface,
             valueColor: AlwaysStoppedAnimation<Color>(
-                Theme.of(context).colorScheme.primary),
-            borderRadius: const BorderRadius.all(Radius.circular(4)),
+              Theme.of(context).colorScheme.primary,
+            ),
           ),
+          // PageView
           Expanded(
             child: PageView(
               controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              // We disable swiping so we can strictly control
+              // when the user can proceed
               children: formPages,
               onPageChanged: (index) {
                 setState(() {
@@ -118,30 +174,23 @@ class FormPageState extends State<FormPage> {
               },
             ),
           ),
-          // Next button at the bottom
+          // Bottom navigation
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Show "Back" button if not on the first page
                 if (currentPage != 0)
                   ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        currentPage--;
-                      });
-                      _pageController.animateToPage(
-                        currentPage,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                      updateProgress();
-                    },
+                    onPressed: previousPage,
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 16),
+                        vertical: 12,
+                        horizontal: 16,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -149,13 +198,16 @@ class FormPageState extends State<FormPage> {
                     child: const Icon(Icons.chevron_left),
                   ),
                 const SizedBox(width: 16),
+                // "Next" or "Submit"
                 ElevatedButton(
                   onPressed: nextPage,
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
+                      vertical: 12,
+                      horizontal: 16,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -165,7 +217,7 @@ class FormPageState extends State<FormPage> {
                         ? Icons.check
                         : Icons.chevron_right,
                   ),
-                )
+                ),
               ],
             ),
           ),

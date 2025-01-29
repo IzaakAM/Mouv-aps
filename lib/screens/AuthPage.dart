@@ -111,22 +111,29 @@ class AuthPageState extends State<AuthPage> {
           isLogin ? 'Connexion' : 'S\'enregistrer',
           style: GoogleFonts.oswald(
             fontSize: 30,
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme
+                .of(context)
+                .colorScheme
+                .primary,
             fontWeight: FontWeight.w500,
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: Form(
+      // This ensures the Scaffold adjusts for the keyboard automatically.
+      resizeToAvoidBottomInset: true,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // The Form itself
+              Form(
                 key: _formKey,
                 child: Column(
                   children: [
                     CustomInputField(
                       labelText: 'Nom d\'utilisateur',
+                      controller: _usernameController,
                       keyboardType: TextInputType.text,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -134,27 +141,22 @@ class AuthPageState extends State<AuthPage> {
                         }
                         return null;
                       },
-                      onChanged: (value) {
-                        _usernameController.text = value!;
-                      },
                     ),
                     if (!isLogin)
                       CustomInputField(
                         labelText: 'Email',
-                        keyboardType: TextInputType.text,
                         controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Veuillez entrer votre adresse mail';
                           }
                           return null;
                         },
-                        onChanged: (value) {
-                          _emailController.text = value!;
-                        },
                       ),
                     CustomInputField(
                       labelText: 'Mot de passe',
+                      controller: _passwordController,
                       keyboardType: TextInputType.text,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -162,16 +164,16 @@ class AuthPageState extends State<AuthPage> {
                         }
                         return null;
                       },
-                      onChanged: (value) {
-                        _passwordController.text = value!;
-                      },
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _submit,
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        backgroundColor: Theme
+                            .of(context)
+                            .colorScheme
+                            .primary,
                       ),
                       child: Text(isLogin ? 'Connexion' : 'Créer un compte'),
                     ),
@@ -182,24 +184,27 @@ class AuthPageState extends State<AuthPage> {
                           isLogin = !isLogin;
                         });
                       },
-                      child: Text(isLogin
-                          ? 'Pas encore de compte? Créer un compte'
-                          : 'Déjà un compte? Se connecter'),
+                      child: Text(
+                        isLogin
+                            ? 'Pas encore de compte? Créer un compte'
+                            : 'Déjà un compte? Se connecter',
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _continueAsGuest,
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.black12,
+              const SizedBox(height: 20),
+              // The Guest button
+              ElevatedButton(
+                onPressed: _continueAsGuest,
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.black12,
+                ),
+                child: const Text('Continuer en tant qu\'invité'),
               ),
-              child: const Text('Continuer en tant qu\'invité'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -67,6 +67,7 @@ class NextActivityView extends StatelessWidget {
       thumbnailUrl:
           "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
       isLocked: false,
+      date: DateTime.now(),
       steps: ['step1', 'step2'],
     );
     return Column(

@@ -93,6 +93,7 @@ class SessionGrid extends StatelessWidget {
                     "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
                 isLocked: index == 2,
                 isFinished: index == 0,
+                date: DateTime.now(),
                 steps: [
                   "Step 1",
                   "Step 2",
