@@ -62,7 +62,9 @@ flutter:
   assets:
     - assets/avatar.png
     - assets/tree.json
-
+    - assets/coach.webp
+    - assets/doctor.webp
+    - assets/nutritionist.webp
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
