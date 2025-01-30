@@ -6,8 +6,9 @@ class Person {
   String name;
   String profession;
   String profilePhotoUrl;
+  String dernierMessage;
 
-  Person(this.name, this.profession, this.profilePhotoUrl);
+  Person(this.name, this.profession, this.profilePhotoUrl, this.dernierMessage);
 }
 
 class ChatPage extends StatefulWidget {
@@ -37,9 +38,12 @@ class _ChatPageState extends State<ChatPage> {
 
   void _initializePersons() {
     _chatRecipients = [
-      Person('Alice', "Coach", 'assets/coach.webp'),
-      Person('Sophie', "Docteur", 'assets/doctor.webp'),
-      Person('Charlie', "Nutritioniste", 'assets/nutritionist.webp'),
+      Person('Alice', "Coach", 'assets/coach.webp',
+          'Moi : Bonjour, j\'aurais une question'),
+      Person('Sophie', "Docteur", 'assets/doctor.webp',
+          'Sophie : Enchantée, je suis la professionnelle de santé'),
+      Person('Charlie', "Nutritioniste", 'assets/nutritionist.webp',
+          'Charlie : Enchanté, je suis le nutritioniste'),
     ];
   }
 
@@ -110,7 +114,7 @@ class _ChatPageState extends State<ChatPage> {
         Padding(
           padding: const EdgeInsets.all(0.1),
           child: Text(
-            "Veuillez choisir une catégorie",
+            "Sur quel sujet avez-vous une question ?",
             style: GoogleFonts.oswald(
               textStyle: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
@@ -128,12 +132,26 @@ class _ChatPageState extends State<ChatPage> {
               final category = _categories[index];
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
-                child: ListTile(
-                  title: Text(
-                    category['name'],
-                    style: GoogleFonts.oswald(),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 16.0),
+                      textStyle: GoogleFonts.oswald(
+                        textStyle: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      minimumSize:
+                          const Size(200, 50),
+                    ),
+                    onPressed: () => _navigateToCategory(category['name']),
+                    child: Text(category['name']),
                   ),
-                  onTap: () => _navigateToCategory(category['name']),
                 ),
               );
             },
@@ -142,7 +160,7 @@ class _ChatPageState extends State<ChatPage> {
         Padding(
           padding: const EdgeInsets.all(0.1),
           child: Text(
-            "Mes derniers messages",
+            "Mes derniers messages :",
             style: GoogleFonts.oswald(
               textStyle: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
@@ -165,11 +183,11 @@ class _ChatPageState extends State<ChatPage> {
                     backgroundImage: AssetImage(person.profilePhotoUrl),
                   ),
                   title: Text(
-                    person.name,
+                    '${person.name} - ${person.profession}',
                     style: GoogleFonts.oswald(),
                   ),
                   subtitle: Text(
-                    person.profession,
+                    person.dernierMessage,
                     style: GoogleFonts.oswald(),
                   ),
                   onTap: () {},
@@ -194,7 +212,8 @@ class _ChatPageState extends State<ChatPage> {
             ),
             if (_currentCategory != null)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Text(
                   "Catégorie: $_currentCategory",
                   textAlign: TextAlign.left,
@@ -233,8 +252,8 @@ class _ChatPageState extends State<ChatPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: _goBack,
+            icon: const Icon(Icons.arrow_back),
+            onPressed: _goBack,
           ),
           Text(
             _finalResponse ?? '',
@@ -261,18 +280,19 @@ class _ChatPageState extends State<ChatPage> {
             children: [
               Expanded(
                 child: TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Entrez du texte',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                 ),
               ),
               IconButton(
-                icon: Icon(Icons.send),
+                icon: const Icon(Icons.send),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Message envoyé avec succès $professionnel!'),
+                      content:
+                          Text('Message envoyé avec succès $professionnel!'),
                     ),
                   );
                   _resetToStart();
@@ -296,6 +316,103 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
+  Widget _buildPainQuestionView() {
+    Map<String, dynamic> _selectedOptions = {};
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: _goBack,
+            ),
+            if (_currentCategory != null)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Text(
+                  "Catégorie: $_currentCategory",
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.oswald(
+                    textStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        if (_currentQuestionText != null)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              _currentQuestionText!,
+              style: const TextStyle(fontSize: 18),
+            ),
+          ),
+        if (_currentOptions.isNotEmpty)
+          Expanded(
+            child: SingleChildScrollView(
+              child: Form(
+                child: Column(
+                  children: _currentOptions.map((option) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(
+                            option['question'],
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        ...option['options'].map<Widget>((opt) {
+                          return ListTile(
+                            title: Text(opt),
+                            leading: Radio(
+                              value: opt,
+                              groupValue: _selectedOptions[option['question']],
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedOptions[option['question']] = value;
+                                });
+                              },
+                              fillColor: MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.selected)) {
+                                    return Theme.of(context).colorScheme.primary;
+                                  }
+                                  return Colors.grey;
+                                },
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ],
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ElevatedButton(
+            onPressed: () {
+              // Handle form submission
+            },
+            child: const Text("Envoi"),
+          ),
+        ),
+      ],
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -303,7 +420,8 @@ class _ChatPageState extends State<ChatPage> {
       body: Builder(
         builder: (context) {
           if (_finalResponse != null) {
-            if (_finalResponse == "Envoyer un message au professionnel de santé.") {
+            if (_finalResponse ==
+                "Envoyer un message au professionnel de santé.") {
               professionnel = "au professionnel de santé";
               return _chatSanteView();
             }
@@ -320,6 +438,11 @@ class _ChatPageState extends State<ChatPage> {
 
           if (_currentCategory == null) {
             return _buildCategoriesView();
+          }
+
+          if (_currentQuestionText ==
+              "Est-ce normal de ressentir des douleurs après une séance ?") {
+            return _buildPainQuestionView();
           }
 
           return _buildQuestionsView();
