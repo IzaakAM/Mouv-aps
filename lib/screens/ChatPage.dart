@@ -114,7 +114,7 @@ class _ChatPageState extends State<ChatPage> {
         Padding(
           padding: const EdgeInsets.all(0.1),
           child: Text(
-            "Veuillez choisir une catégorie :",
+            "Sur quel sujet avez-vous une question ?",
             style: GoogleFonts.oswald(
               textStyle: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
@@ -147,7 +147,7 @@ class _ChatPageState extends State<ChatPage> {
                         ),
                       ),
                       minimumSize:
-                          const Size(200, 50), // Adjust the size as needed
+                          const Size(200, 50),
                     ),
                     onPressed: () => _navigateToCategory(category['name']),
                     child: Text(category['name']),
