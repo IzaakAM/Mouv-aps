@@ -16,7 +16,6 @@ class SessionPage extends StatefulWidget {
 }
 
 class _SessionPageState extends State<SessionPage> {
-  late VideoPlayerController _controller;
   bool _isVideoFinished = false;
   String videoUrl = '';
 

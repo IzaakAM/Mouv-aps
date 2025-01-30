@@ -24,7 +24,7 @@ class Session {
       title: json["title"] ?? "",
       duration: json["duration"] ?? 0,
       videoId: json["video_id"] ?? 0,
-      thumbnailUrl: json["thumbnail_url"] ?? "",
+      thumbnailUrl: json["thumbnail_url"] ?? "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
       unauthorized: json["unauthorized"] ?? false,
       completed: json["completed"] ?? false,
       steps: json["steps"] != null

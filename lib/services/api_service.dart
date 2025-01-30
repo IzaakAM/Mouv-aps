@@ -51,7 +51,6 @@ class ApiService {
     }));
 
     final response = await request.close();
-    print(response.statusCode);
     return response.statusCode == HttpStatus.created
         ? jsonDecode(await response.transform(utf8.decoder).join())
         // display the error message
@@ -66,7 +65,6 @@ class ApiService {
 
     // Add the Bearer token for authentication
     request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $accessToken');
-    print(request.headers);
 
     final response = await request.close();
 
@@ -110,11 +108,9 @@ class ApiService {
     final accessToken = await SecureStorageService().read('jwt_access');
     final uri = Uri.parse('$baseUrl/videos/$id/');
     final request = await _httpClient.getUrl(uri);
-    print(uri);
 
     // Add the Bearer token for authentication
     request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $accessToken');
-    print(request.headers);
 
     final response = await request.close();
 
@@ -124,7 +120,6 @@ class ApiService {
       final Map<String, dynamic> data = jsonDecode(responseBody);
 
       // Get the video URL
-      print(data["video_url"]);
       return data["video_url"];
     } else {
       throw Exception('Failed to fetch videos. Status: ${response.statusCode}');
@@ -135,8 +130,8 @@ class ApiService {
   static Future<Map<String, dynamic>> uploadPrescription({
     required File file,
   }) async {
-    final uri = Uri.parse('$baseUrl/api/prescriptions/');
-    final accessToken = SecureStorageService().read('jwt_access');
+    final uri = Uri.parse('$baseUrl/prescriptions/');
+    final accessToken = await SecureStorageService().read('jwt_access');
     final request = await _httpClient.postUrl(uri);
 
     const boundary = 'BOUNDARY123';
@@ -146,10 +141,8 @@ class ApiService {
     );
 
     // Add Bearer token
-    request.headers.set(
-      HttpHeaders.authorizationHeader,
-      'Bearer $accessToken',
-    );
+    request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $accessToken');
+
 
     // Build the multipart body manually
 
@@ -195,4 +188,47 @@ class ApiService {
       throw Exception(errorJson["detail"] ?? 'Unknown error uploading file.');
     }
   }
+
+  static Future<Map<String, dynamic>> submitQuestionnaire(
+      Map<String, dynamic> data) async {
+    final uri = Uri.parse('$baseUrl/questionnaires/');
+    final request = await _httpClient.postUrl(uri);
+    final accessToken = await SecureStorageService().read('jwt_access');
+
+    // Add request headers and body
+    request.headers.contentType = ContentType.json;
+    request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $accessToken');
+    print(jsonEncode(data));
+    request.write(jsonEncode(data));
+
+
+    final response = await request.close();
+    print(response.statusCode);
+    return response.statusCode == HttpStatus.ok
+        ? jsonDecode(await response.transform(utf8.decoder).join())
+        : throw Exception('Failed to submit');
+  }
+
+  static Future<Map<String, dynamic>> getUserInfo() async {
+    final accessToken = await SecureStorageService().read('jwt_access');
+    final uri = Uri.parse('$baseUrl/patients/');
+    final request = await _httpClient.getUrl(uri);
+
+    // Add the Bearer token for authentication
+    request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $accessToken');
+
+    final response = await request.close();
+
+    if (response.statusCode == HttpStatus.ok) {
+      // Read response body
+      final responseBody = await response.transform(utf8.decoder).join();
+      final List<dynamic> data = jsonDecode(responseBody);
+
+      // Get the video URL
+      return data[0];
+    } else {
+      throw Exception('Failed to fetch videos. Status: ${response.statusCode}');
+    }
+  }
+
 }

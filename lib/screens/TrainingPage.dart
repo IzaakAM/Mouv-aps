@@ -17,7 +17,6 @@ class _TrainingPageState extends State<TrainingPage> {
   @override
   void initState() {
     super.initState();
-    // 1) Trigger the session load on page init
     final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
     sessionProvider.loadSessions();
   }
