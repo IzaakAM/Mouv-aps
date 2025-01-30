@@ -48,7 +48,6 @@ class _TrainingPageState extends State<TrainingPage> {
                 ),
               ),
               const SizedBox(height: 10),
-              // 2) Render the real sessions
               SessionGrid(sessions: sessionProvider.sessions),
               const SizedBox(height: 20),
             ],
@@ -101,22 +100,6 @@ class SessionGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // sessions = List.generate(
-    //     3,
-    //     (index) => Session(
-    //             title: "Session $index",
-    //             duration: 30,
-    //             videoUrl: "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
-    //             thumbnailUrl:
-    //                 "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-    //             isLocked: index == 2,
-    //             isFinished: index == 0,
-    //             date: DateTime.now(),
-    //             steps: [
-    //               "Step 1",
-    //               "Step 2",
-    //               "Step 3",
-    //             ]));
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -141,7 +124,7 @@ class SessionPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (!session.isLocked && !session.isFinished) {
+        if (!session.unauthorized && !session.completed) {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -149,7 +132,7 @@ class SessionPreview extends StatelessWidget {
             ),
           );
         }
-        else if (session.isFinished) {
+        else if (session.completed) {
           showDialog(
             context: context,
             builder: (context) {
@@ -193,7 +176,7 @@ class SessionPreview extends StatelessWidget {
               ),
               child: Image.network(
                 color: Colors.black.withOpacity(0.4),
-                colorBlendMode: (session.isFinished || session.isLocked)
+                colorBlendMode: (session.completed || session.unauthorized)
                     ? BlendMode.darken
                     : BlendMode.dst,
                 session.thumbnailUrl,
@@ -203,9 +186,9 @@ class SessionPreview extends StatelessWidget {
             Positioned(
               top: 8,
               right: 8,
-              child: session.isLocked
+              child: session.unauthorized
                   ? const Icon(Icons.lock)
-                  : session.isFinished
+                  : session.completed
                       ? const Icon(Icons.check)
                       : const SizedBox(),
             ),

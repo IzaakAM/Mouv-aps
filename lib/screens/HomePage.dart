@@ -24,10 +24,9 @@ class _HomePageState extends State<HomePage> {
       (index) => Recipe(
         title: "Recipe $index",
         duration: 30,
-        videoUrl: "",
+        videoId: 0,
         thumbnailUrl:
             "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-        id: 1,
         requiredPoints: 10,
         meal: 'breakfast',
         ingredients: {'ingredient1': 1},
@@ -63,10 +62,9 @@ class NextActivityView extends StatelessWidget {
     final session = Session(
       title: "Session 1",
       duration: 30,
-      videoUrl: "",
+      videoId: 0,
       thumbnailUrl:
           "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-      isLocked: false,
       date: DateTime.now(),
       steps: ['step1', 'step2'],
     );

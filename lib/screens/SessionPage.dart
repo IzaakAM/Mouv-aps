@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 
 import '../models/session.dart';
+import '../services/api_service.dart';
 import '../widgets/videoplayer.dart';
 
 class SessionPage extends StatefulWidget {
@@ -17,21 +18,19 @@ class SessionPage extends StatefulWidget {
 class _SessionPageState extends State<SessionPage> {
   late VideoPlayerController _controller;
   bool _isVideoFinished = false;
+  String videoUrl = '';
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        VideoPlayerController.networkUrl(Uri.parse(widget.session.videoUrl))
-          ..initialize().then((_) {
-            setState(() {});
-          });
+    _fetchVideoUrl();
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  Future<void> _fetchVideoUrl() async {
+    final url = await ApiService.getVideoURL(widget.session.videoId);
+    setState(() {
+      videoUrl = url;
+    });
   }
 
   void finishPopUp() {
@@ -56,66 +55,77 @@ class _SessionPageState extends State<SessionPage> {
 
   @override
   Widget build(BuildContext context) {
+    // You may want to handle the case where `videoUrl` is still empty:
+    // e.g. display a CircularProgressIndicator while loading the URL.
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.session.title,
-            style: GoogleFonts.oswald(
-              textStyle: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontSize: 30,
-                fontWeight: FontWeight.w500,
-              ),
-            )),
-        // Icon
+        title: Text(
+          widget.session.title,
+          style: GoogleFonts.oswald(
+            textStyle: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: 30,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
         actions: [
           IconButton(
-              icon: const Icon(Icons.check),
-              color: _isVideoFinished
-                  ? Theme.of(context).colorScheme.onSurface
-                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-              onPressed: () {
-                if (_isVideoFinished) {
-                  finishPopUp();
-                }
-              }),
+            icon: const Icon(Icons.check),
+            color: _isVideoFinished
+                ? Theme.of(context).colorScheme.onSurface
+                : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            onPressed: () {
+              if (_isVideoFinished) {
+                finishPopUp();
+              }
+            },
+          ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: videoUrl.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             VideoPlayerWidget(
-                videoUrl: widget.session.videoUrl,
-                onVideoFinished: () {
-                  setState(() {
-                    _isVideoFinished = true;
-                  });
-                }),
+              videoUrl: videoUrl,
+              onVideoFinished: () {
+                setState(() {
+                  _isVideoFinished = true;
+                });
+              },
+            ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(Icons.checklist_rounded),
                 const SizedBox(width: 10),
-                Text('${widget.session.steps.length} exercices',
-                    style: GoogleFonts.lato(
-                      textStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    )),
+                Text(
+                  '${widget.session.steps.length} exercices',
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
                 const SizedBox(width: 20),
                 const Icon(Icons.hourglass_empty_rounded),
                 const SizedBox(width: 10),
-                Text('${widget.session.duration} minutes',
-                    style: GoogleFonts.lato(
-                      textStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    )),
+                Text(
+                  '${widget.session.duration} minutes',
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 10),
@@ -157,10 +167,12 @@ class StepList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: steps
-          .map((step) => ListTile(
-                title: Text("Step ${steps.indexOf(step) + 1}"),
-                subtitle: Text(step),
-              ))
+          .asMap()
+          .entries
+          .map((entry) => ListTile(
+        title: Text("Étape ${entry.key + 1}"),
+        subtitle: Text(entry.value),
+      ))
           .toList(),
     );
   }

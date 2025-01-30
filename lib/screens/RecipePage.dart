@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mouv_aps/services/api_service.dart';
 import 'package:video_player/video_player.dart';
 
 import '../models/recipe.dart';
@@ -16,21 +17,12 @@ class RecipePage extends StatefulWidget {
 
 class _RecipePageState extends State<RecipePage> {
   late VideoPlayerController _controller;
+  String videoUrl = '';
 
   @override
-  void initState() {
+  Future<void> initState() async {
     super.initState();
-    _controller =
-        VideoPlayerController.networkUrl(Uri.parse(widget.recipe.videoUrl))
-          ..initialize().then((_) {
-            setState(() {});
-          });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+    videoUrl = await ApiService.getVideoURL(widget.recipe.videoId);
   }
 
   @override
@@ -50,7 +42,7 @@ class _RecipePageState extends State<RecipePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            VideoPlayerWidget(videoUrl: widget.recipe.videoUrl),
+            VideoPlayerWidget(videoUrl: videoUrl),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

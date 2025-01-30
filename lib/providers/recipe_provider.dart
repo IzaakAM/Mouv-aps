@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:mouv_aps/models/session.dart';
+import 'package:mouv_aps/models/recipe.dart';
 import 'package:mouv_aps/services/api_service.dart';
 import 'package:mouv_aps/services/secure_storage_service.dart';
 
-class SessionProvider with ChangeNotifier {
-  List<Session> _sessions = [];
+class RecipeProvider with ChangeNotifier {
+  List<Recipe> _recipes = [];
   bool _isLoading = false;
   String _errorMessage = '';
 
-  List<Session> get sessions => _sessions;
+  List<Recipe> get recipes => _recipes;
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
 
-  // 3) Load sessions from the server
-  Future<void> loadSessions() async {
+  Future<void> loadRecipes() async {
     _isLoading = true;
     _errorMessage = '';
     notifyListeners();
@@ -27,15 +26,15 @@ class SessionProvider with ChangeNotifier {
       }
 
       // Call the service
-      final rawSessions = await ApiService.fetchSessions();
+      final rawRecipes = await ApiService.fetchRecipes();
 
       // Convert each item to a Session model
-      final loaded = rawSessions.map((json) => Session.fromJson(json)).toList();
+      final loaded = rawRecipes.map((json) => Recipe.fromJson(json)).toList();
 
-      _sessions = loaded;
+      _recipes = loaded;
     } catch (e) {
       _errorMessage = e.toString();
-      _sessions = [];
+      _recipes = [];
     } finally {
       _isLoading = false;
       notifyListeners();

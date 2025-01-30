@@ -6,8 +6,11 @@ import 'package:mouv_aps/services/secure_storage_service.dart';
 import 'package:mouv_aps/widgets/PagesView.dart';
 import 'package:mouv_aps/widgets/custom_input_field.dart';
 
+import 'FormPage.dart';
+
 class AuthPage extends StatefulWidget {
-  const AuthPage({super.key});
+  final bool shouldRedirectToFormPage;
+  const AuthPage({super.key, this.shouldRedirectToFormPage = false});
 
   @override
   AuthPageState createState() => AuthPageState();
@@ -23,7 +26,7 @@ class AuthPageState extends State<AuthPage> {
   @override
   void initState() {
     super.initState();
-    _checkIfUserIsLoggedIn();
+    if (!widget.shouldRedirectToFormPage) _checkIfUserIsLoggedIn();
   }
 
   Future<void> _checkIfUserIsLoggedIn() async {
@@ -48,7 +51,8 @@ class AuthPageState extends State<AuthPage> {
         if (isLogin) {
           response = await ApiService.requestToken(username, password);
         } else {
-          response = await ApiService.register(username, email, password);
+          await ApiService.register(username, email, password);
+          response = await ApiService.requestToken(username, password);
         }
 
         // Assuming the response contains a JWT token
@@ -64,10 +68,17 @@ class AuthPageState extends State<AuthPage> {
           );
 
           // Navigate to the home page or dashboard
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const PagesView()),
-          );
+          if (widget.shouldRedirectToFormPage) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const FormPage()),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const PagesView()),
+            );
+          }
         } catch (e) {
           // Handle error response
           ScaffoldMessenger.of(context).showSnackBar(
@@ -95,8 +106,7 @@ class AuthPageState extends State<AuthPage> {
         context,
         MaterialPageRoute(builder: (context) => const PagesView()),
       );
-    }
-    catch (e) {
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
@@ -111,10 +121,7 @@ class AuthPageState extends State<AuthPage> {
           isLogin ? 'Connexion' : 'S\'enregistrer',
           style: GoogleFonts.oswald(
             fontSize: 30,
-            color: Theme
-                .of(context)
-                .colorScheme
-                .primary,
+            color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -158,6 +165,7 @@ class AuthPageState extends State<AuthPage> {
                       labelText: 'Mot de passe',
                       controller: _passwordController,
                       keyboardType: TextInputType.text,
+                      obscureText: true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Veuillez entrer votre mot de passe';
@@ -170,10 +178,7 @@ class AuthPageState extends State<AuthPage> {
                       onPressed: _submit,
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Theme
-                            .of(context)
-                            .colorScheme
-                            .primary,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                       ),
                       child: Text(isLogin ? 'Connexion' : 'Créer un compte'),
                     ),
@@ -194,15 +199,15 @@ class AuthPageState extends State<AuthPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              // The Guest button
-              ElevatedButton(
-                onPressed: _continueAsGuest,
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.black12,
+              if (!widget.shouldRedirectToFormPage)
+                ElevatedButton(
+                  onPressed: _continueAsGuest,
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.black12,
+                  ),
+                  child: const Text('Continuer en tant qu\'invité'),
                 ),
-                child: const Text('Continuer en tant qu\'invité'),
-              ),
             ],
           ),
         ),

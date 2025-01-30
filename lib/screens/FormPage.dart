@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -7,6 +10,9 @@ import 'package:mouv_aps/screens/form_pages/MedicalInfoFormPage.dart';
 import 'package:mouv_aps/screens/form_pages/NutritionFormPage.dart';
 import 'package:mouv_aps/screens/form_pages/PersonalDetailsFormPage.dart';
 import 'package:mouv_aps/screens/form_pages/PhysicalExerciseFormPage.dart';
+import 'package:mouv_aps/screens/form_pages/PrescriptionFormPage.dart';
+
+import '../services/api_service.dart';
 
 class FormPage extends StatefulWidget {
   const FormPage({super.key});
@@ -18,7 +24,7 @@ class FormPage extends StatefulWidget {
 class FormPageState extends State<FormPage> {
   // One key per page
   final List<GlobalKey<FormState>> formKeys = List.generate(
-    5,
+    6,
     (_) => GlobalKey<FormState>(),
   );
 
@@ -31,7 +37,10 @@ class FormPageState extends State<FormPage> {
   late final List<Widget> formPages;
 
   // total number of pages
-  final int totalPages = 5;
+  final int totalPages = 6;
+
+  // File saved
+  PlatformFile? filePicked;
 
   @override
   void initState() {
@@ -44,7 +53,13 @@ class FormPageState extends State<FormPage> {
       MedicalInfoFormpage(formKey: formKeys[2]),
       PhysicalExerciseFormpage(formKey: formKeys[3]),
       NutritionFormPage(formKey: formKeys[4]),
+      PrescriptionFormPage(formKey: formKeys[5], onFilePicked: onFilePicked),
     ];
+  }
+
+  void onFilePicked(PlatformFile? file) {
+    print("File Picked: $file");
+    filePicked = file;
   }
 
   // Update the progress based on the current page
@@ -56,6 +71,7 @@ class FormPageState extends State<FormPage> {
 
   // Move to the next page IF validation passes
   void nextPage() {
+    print("FormState Exists: ${formKeys[currentPage].currentState != null}");
     final isValid = formKeys[currentPage].currentState!.validate();
     if (!isValid) {
       showDialog(
@@ -75,7 +91,6 @@ class FormPageState extends State<FormPage> {
       return; // do not proceed if invalid
     }
     formKeys[currentPage].currentState!.save();
-
     // If valid and we're NOT on the last page, increment page
     if (currentPage < totalPages - 1) {
       setState(() {
@@ -102,12 +117,27 @@ class FormPageState extends State<FormPage> {
               TextButton(
                 onPressed: () {
                   print("Form Submitted: ${userForm.toJson()}");
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Formulaire soumis avec succès!'),
-                    ),
-                  );
+                  try {
+                    // Save the file if it exists
+                    if (filePicked != null) {
+                      // Save the file to the server
+                      ApiService.uploadPrescription(
+                          file: File(filePicked!.path!));
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Formulaire soumis avec succès!'),
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Erreur lors de la soumission: $e'),
+                      ),
+                    );
+                  }
+
                 },
                 child: const Text('OK'),
               ),

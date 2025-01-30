@@ -19,7 +19,7 @@ class AllRecipesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<RecipeCard> recipes = [
-      RecipeCard(
+      /*RecipeCard(
           recipe: Recipe(
         id: 1,
         title: 'Pancakes',
@@ -62,7 +62,7 @@ class AllRecipesPage extends StatelessWidget {
         requiredPoints: 15,
         meal: 'Lunch',
         videoUrl: 'https://www.youtube.com/watch?v=3tQ1v0Y3yfA',
-      ))
+      ))*/
     ];
     return Scaffold(
       appBar: AppBar(

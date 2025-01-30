@@ -63,7 +63,7 @@ class RecipeView extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: <Widget>[
-                RecipeCard(
+                /*RecipeCard(
                   recipe: Recipe(
                       id: 1,
                       title: 'Recipe 1',
@@ -104,7 +104,7 @@ class RecipeView extends StatelessWidget {
                       steps: ['step1', 'step2'],
                       thumbnailUrl:
                           'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'),
-                ),
+                ),*/
                 IconButton(
                   icon: Icon(
                       Icons.arrow_circle_right_outlined,

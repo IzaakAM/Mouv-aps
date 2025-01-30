@@ -6,6 +6,7 @@ class CustomInputField extends StatelessWidget {
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
   final String? hintText;
+  final bool obscureText;
   final void Function(String?)? onSaved;
 
   const CustomInputField({
@@ -15,6 +16,7 @@ class CustomInputField extends StatelessWidget {
     required this.keyboardType,
     this.validator,
     this.hintText,
+    this.obscureText = false,
     this.onSaved,
   }) : super(key: key);
 
@@ -34,6 +36,7 @@ class CustomInputField extends StatelessWidget {
           hintStyle: const TextStyle(color: Colors.grey),
           border: const OutlineInputBorder(),
         ),
+        obscureText: obscureText,
       ),
     );
   }

@@ -15,7 +15,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   List<Session> sessions = [
-  Session(
+  /*Session(
   title: "Session 1",
   duration: 30,
   videoUrl: "https://192.168.72.204:8443/media/videos/Ahsoka.S01E02.Part.Two.1080p.DSNP.WEB-DL.DDP5.1.H.264-NTb.mkv",
@@ -26,7 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
   "Step 1",
   "Step 2",
   "Step 3",
-  ]),
+  ]),*/
 ];
   DateTime _currentMonthStart = DateTime(
       DateTime.now().year, DateTime.now().month, 1);
@@ -90,7 +90,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Color _evaluateSessionColor(Session session) {
     print(DateTime.now().difference(session.date).inDays);
-    if (session.isFinished) {
+    if (session.completed) {
       return Colors.green.withOpacity(0.5);
     }
     else if (DateTime.now().difference(session.date).inDays >= 1) {

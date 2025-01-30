@@ -1,21 +1,21 @@
 class Session {
   final String title;
-  final String videoUrl;
+  final int videoId;
   final String thumbnailUrl;
   final DateTime date;
   final int duration;
-  bool isFinished = false;
-  bool isLocked = false;
+  bool completed = false;
+  bool unauthorized = false;
   final List<String> steps;
 
   Session({
     required this.title,
-    required this.videoUrl,
+    required this.videoId,
     required this.thumbnailUrl,
     required this.date,
     required this.duration,
-    this.isFinished = false,
-    this.isLocked = false,
+    this.completed = false,
+    this.unauthorized = false,
     required this.steps,
   });
 
@@ -23,10 +23,10 @@ class Session {
     return Session(
       title: json["title"] ?? "",
       duration: json["duration"] ?? 0,
-      videoUrl: json["video_url"] ?? "",
+      videoId: json["video_id"] ?? 0,
       thumbnailUrl: json["thumbnail_url"] ?? "",
-      isLocked: json["is_locked"] ?? false,
-      isFinished: json["is_finished"] ?? false,
+      unauthorized: json["unauthorized"] ?? false,
+      completed: json["completed"] ?? false,
       steps: json["steps"] != null
           ? List<String>.from(json["steps"])
           : <String>[],
