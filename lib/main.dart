@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mouv_aps/providers/chat_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:mouv_aps/providers/session_provider.dart';
@@ -14,6 +15,9 @@ void main() {
       providers: [
         ChangeNotifierProvider<SessionProvider>(
           create: (_) => SessionProvider(),
+        ),
+        ChangeNotifierProvider<ChatProvider>(
+          create: (_) => ChatProvider(),
         ),
       ],
       child: const MyApp(),

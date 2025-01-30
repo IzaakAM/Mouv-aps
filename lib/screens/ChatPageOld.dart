@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
 import 'ChatPageDecisionTreeLoader.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-
-// Import your Chat-related classes
-import 'package:mouv_aps/models/conversation.dart';
-import 'package:mouv_aps/providers/chat_provider.dart';
-import 'ConversationPage.dart';
 
 class Person {
-  // ADDED backendUsername so we know who the staff is on the backend
   String name;
   String profession;
   String profilePhotoUrl;
   String dernierMessage;
-  String backendUsername; // e.g. "alice"
 
-  Person(this.name, this.profession, this.profilePhotoUrl,
-      this.dernierMessage, this.backendUsername);
+  Person(this.name, this.profession, this.profilePhotoUrl, this.dernierMessage);
 }
 
 class ChatPage extends StatefulWidget {
@@ -36,54 +27,23 @@ class _ChatPageState extends State<ChatPage> {
   List<dynamic> _currentOptions = [];
   String? _finalResponse;
   String? professionnel;
-
-  // We keep the local "staff" list
-  List<Person> _chatRecipients = [];
+  List<dynamic> _chatRecipients = [];
 
   @override
   void initState() {
     super.initState();
     _loadDecisionTree();
     _initializePersons();
-
-    // ALSO fetch the real conversations from the ChatProvider
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _fetchConversations();
-    });
   }
 
-  // 1) fetch conversations
-  Future<void> _fetchConversations() async {
-    final chatProvider = context.read<ChatProvider>();
-    await chatProvider.fetchConversations();
-    // Once fetched, we can update UI so we can show last messages
-    setState(() {});
-  }
-
-  // 2) define staff with real backend usernames
   void _initializePersons() {
     _chatRecipients = [
-      Person(
-        'Alice',
-        "Coach",
-        'assets/coach.webp',
-        '...',
-        'alice', // The backend username for Alice
-      ),
-      Person(
-        'Sophie',
-        "Docteur",
-        'assets/doctor.webp',
-        '...',
-        'sophie', // The backend username for Sophie
-      ),
-      Person(
-        'Charlie',
-        "Nutritioniste",
-        'assets/nutritionist.webp',
-        '...',
-        'charlie', // The backend username for Charlie
-      ),
+      Person('Alice', "Coach", 'assets/coach.webp',
+          'Moi : Bonjour, j\'aurais une question'),
+      Person('Sophie', "Docteur", 'assets/doctor.webp',
+          'Sophie : Enchantée, je suis la professionnelle de santé'),
+      Person('Charlie', "Nutritioniste", 'assets/nutritionist.webp',
+          'Charlie : Enchanté, je suis le nutritioniste'),
     ];
   }
 
@@ -147,56 +107,7 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-  ///
-  /// 3) Helper method to open a conversation with a staff user
-  ///
-  Future<void> _openConversation(Person staff) async {
-    final chatProvider = context.read<ChatProvider>();
-
-    // 3a) Optionally, see if we already have a conversation with staff.backendUsername
-    Conversation? existingConv = chatProvider.findConversationByUsername(staff.backendUsername);
-
-    if (existingConv == null) {
-      // 3b) If not found, create or send a first message
-      // You can do a "hello" or empty message to auto-create conversation
-      await chatProvider.sendMessageToUsername(staff.backendUsername, "Hello from me!");
-      // Re-fetch or read from provider
-      existingConv = chatProvider.findConversationByUsername(staff.backendUsername);
-    }
-
-    if (existingConv == null) {
-      // If still null => some error
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Failed to open conversation.")),
-      );
-      return;
-    }
-
-    // 3c) Navigate to the conversation page
-    if (!mounted) return;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => ConversationPage(conversation: existingConv!)),
-    );
-  }
-
-  ///
-  /// 4) Build the main categories view, including "Mes derniers messages"
-  ///
   Widget _buildCategoriesView() {
-    // Access the ChatProvider data
-    final chatProvider = context.watch<ChatProvider>();
-
-    // Update the last message for each Person from real conversation data
-    for (var p in _chatRecipients) {
-      final conv = chatProvider.findConversationByUsername(p.backendUsername);
-      if (conv != null && conv.messages.isNotEmpty) {
-        p.dernierMessage = "${conv.messages.last.sender} : ${conv.messages.last.message}";
-      } else {
-        p.dernierMessage = "Aucun message récent";
-      }
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -236,7 +147,7 @@ class _ChatPageState extends State<ChatPage> {
                         ),
                       ),
                       minimumSize:
-                      const Size(200, 50), // Adjust the size as needed
+                          const Size(200, 50), // Adjust the size as needed
                     ),
                     onPressed: () => _navigateToCategory(category['name']),
                     child: Text(category['name']),
@@ -279,10 +190,7 @@ class _ChatPageState extends State<ChatPage> {
                     person.dernierMessage,
                     style: GoogleFonts.oswald(),
                   ),
-                  onTap: () async {
-                    // 4a) open the conversation with the staff
-                    await _openConversation(person);
-                  },
+                  onTap: () {},
                 ),
               );
             },
@@ -292,9 +200,6 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  ///
-  /// The rest is your existing code for the chatbot
-  ///
   Widget _buildQuestionsView() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,7 +212,8 @@ class _ChatPageState extends State<ChatPage> {
             ),
             if (_currentCategory != null)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Text(
                   "Catégorie: $_currentCategory",
                   textAlign: TextAlign.left,
@@ -376,7 +282,7 @@ class _ChatPageState extends State<ChatPage> {
                 child: TextField(
                   decoration: const InputDecoration(
                     labelText: 'Entrez du texte',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                 ),
               ),
@@ -385,7 +291,8 @@ class _ChatPageState extends State<ChatPage> {
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Message envoyé avec succès $professionnel!'),
+                      content:
+                          Text('Message envoyé avec succès $professionnel!'),
                     ),
                   );
                   _resetToStart();
@@ -423,7 +330,8 @@ class _ChatPageState extends State<ChatPage> {
             ),
             if (_currentCategory != null)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Text(
                   "Catégorie: $_currentCategory",
                   textAlign: TextAlign.left,
@@ -461,9 +369,7 @@ class _ChatPageState extends State<ChatPage> {
                           child: Text(
                             option['question'],
                             style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold
-                            ),
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ),
                         ...option['options'].map<Widget>((opt) {
@@ -478,7 +384,7 @@ class _ChatPageState extends State<ChatPage> {
                                 });
                               },
                               fillColor: MaterialStateProperty.resolveWith<Color>(
-                                    (Set<MaterialState> states) {
+                                (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.selected)) {
                                     return Theme.of(context).colorScheme.primary;
                                   }
@@ -507,17 +413,15 @@ class _ChatPageState extends State<ChatPage> {
       ],
     );
   }
-
-  // 5) The main build
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Chat & Questions")),
+      appBar: AppBar(),
       body: Builder(
         builder: (context) {
-          // If we have a finalResponse => show final or the "chatSanteView"
           if (_finalResponse != null) {
-            if (_finalResponse == "Envoyer un message au professionnel de santé.") {
+            if (_finalResponse ==
+                "Envoyer un message au professionnel de santé.") {
               professionnel = "au professionnel de santé";
               return _chatSanteView();
             }
@@ -532,18 +436,15 @@ class _ChatPageState extends State<ChatPage> {
             return _buildFinalResponseView();
           }
 
-          // If no category selected => show the categories + last messages
           if (_currentCategory == null) {
             return _buildCategoriesView();
           }
 
-          // If the question is the special "pain" => show the special form
           if (_currentQuestionText ==
               "Est-ce normal de ressentir des douleurs après une séance ?") {
             return _buildPainQuestionView();
           }
 
-          // Otherwise show normal question list
           return _buildQuestionsView();
         },
       ),

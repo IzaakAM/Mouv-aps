@@ -3,6 +3,9 @@ import 'dart:io';
 
 import 'package:mouv_aps/services/secure_storage_service.dart';
 
+import '../models/chat_message.dart';
+import '../models/conversation.dart';
+
 class ApiService {
   static const String baseUrl = 'https://192.168.53.15:8443/api';
   static final HttpClient _httpClient = HttpClient()
@@ -193,6 +196,105 @@ class ApiService {
       // Parse error JSON for "detail"
       final errorJson = jsonDecode(responseString);
       throw Exception(errorJson["detail"] ?? 'Unknown error uploading file.');
+    }
+  }
+
+  // 3.1) FETCH ALL CONVERSATIONS
+  static Future<List<Conversation>> fetchConversations() async {
+    final accessToken = await SecureStorageService().read('jwt_access');
+    final uri = Uri.parse('$baseUrl/conversations/');
+    final request = await _httpClient.getUrl(uri);
+
+    request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $accessToken');
+    final response = await request.close();
+
+    if (response.statusCode == HttpStatus.ok) {
+      final responseBody = await response.transform(utf8.decoder).join();
+      final List<dynamic> data = jsonDecode(responseBody);
+      return data.map((json) => Conversation.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch conversations (status ${response.statusCode}).');
+    }
+  }
+
+  // 3.2) FETCH ALL MESSAGES (optional, if you want them separate)
+  static Future<List<ChatMessage>> fetchAllMessages() async {
+    final accessToken = await SecureStorageService().read('jwt_access');
+    final uri = Uri.parse('$baseUrl/chat-messages/');
+    final request = await _httpClient.getUrl(uri);
+
+    request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $accessToken');
+    final response = await request.close();
+
+    if (response.statusCode == HttpStatus.ok) {
+      final responseBody = await response.transform(utf8.decoder).join();
+      final List<dynamic> data = jsonDecode(responseBody);
+      return data.map((json) => ChatMessage.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch messages (status ${response.statusCode}).');
+    }
+  }
+
+  // 3.3) SEND MESSAGE via "create_by_username"
+  // e.g. staffUserName = "Alice"
+  static Future<ChatMessage> sendMessageToUsername({
+    required String recipientUsername,
+    required String text,
+  }) async {
+    final accessToken = await SecureStorageService().read('jwt_access');
+    final uri = Uri.parse('$baseUrl/chat-messages/create_by_username/');
+    final request = await _httpClient.postUrl(uri);
+
+    request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $accessToken');
+    request.headers.contentType = ContentType.json;
+
+    // Body: { "recipient_username": "...", "message": "..." }
+    final body = jsonEncode({
+      "recipient_username": recipientUsername,
+      "message": text,
+    });
+    request.write(body);
+
+    final response = await request.close();
+    final responseString = await response.transform(utf8.decoder).join();
+
+    if (response.statusCode == HttpStatus.created ||
+        response.statusCode == HttpStatus.ok) {
+      final Map<String, dynamic> data = jsonDecode(responseString);
+      return ChatMessage.fromJson(data);
+    } else {
+      throw Exception('Failed to send message: $responseString');
+    }
+  }
+
+  // 3.4) Alternatively, SEND MESSAGE directly to a conversation (if you have an endpoint for that)
+  static Future<ChatMessage> sendMessageToConversation({
+    required int conversationId,
+    required String text,
+  }) async {
+    final accessToken = await SecureStorageService().read('jwt_access');
+    // Suppose you have POST /api/chat-messages/ with { "conversation": conversationId, "message": "..." }
+    final uri = Uri.parse('$baseUrl/chat-messages/');
+    final request = await _httpClient.postUrl(uri);
+
+    request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $accessToken');
+    request.headers.contentType = ContentType.json;
+
+    final body = jsonEncode({
+      "conversation": conversationId,
+      "message": text,
+    });
+    request.write(body);
+
+    final response = await request.close();
+    final responseString = await response.transform(utf8.decoder).join();
+
+    if (response.statusCode == HttpStatus.created ||
+        response.statusCode == HttpStatus.ok) {
+      final Map<String, dynamic> data = jsonDecode(responseString);
+      return ChatMessage.fromJson(data);
+    } else {
+      throw Exception('Failed to send message: $responseString');
     }
   }
 }
