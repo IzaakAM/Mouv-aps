@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mouv_aps/providers/session_provider.dart';
 import 'package:mouv_aps/screens/AuthPage.dart';
 import '../models/session.dart';
+import '../services/api_service.dart';
 import 'SubscriptionPage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,20 +16,30 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  List<Session> sessions = [
-  /*Session(
-  title: "Session 1",
-  duration: 30,
-  videoUrl: "https://192.168.72.204:8443/media/videos/Ahsoka.S01E02.Part.Two.1080p.DSNP.WEB-DL.DDP5.1.H.264-NTb.mkv",
-  thumbnailUrl:
-  "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-  date: DateTime.now(),
-  steps: [
-  "Step 1",
-  "Step 2",
-  "Step 3",
-  ]),*/
-];
+  bool is_guest = false;
+  String username = 'guest';
+  int points = 0;
+  int sessions_completed = 0;
+  int sessions_per_week = 0;
+
+  Future<void> getUserInfo() async {
+    Map<String, dynamic> userInfo = await ApiService.getUserInfo();
+    username = userInfo['user']['username'];
+    is_guest = userInfo['is_guest'];
+    sessions_completed = userInfo['sessions_completed'];
+    sessions_per_week = userInfo['sessions_per_week'];
+    points = userInfo['points'];
+    setState(() {
+
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserInfo();
+  }
+
   DateTime _currentMonthStart = DateTime(
       DateTime.now().year, DateTime.now().month, 1);
 
@@ -153,6 +165,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildCalendarSection() {
+    final SessionProvider sessionProvider = SessionProvider();
+    final List<Session> sessions = sessionProvider.sessions;
     List<Session> filteredSessions = sessions
         .where((session) =>
             session.date.month == _currentMonthStart.month &&
@@ -288,7 +302,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 10),
               Text(
-                "Rania Badi",
+                username,
                 style: GoogleFonts.oswald(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -326,7 +340,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                   child: Text(
-                    "Abonnement : Premium",
+                    (is_guest) ? "S'abonner" : "Abonnement Premium",
                     style: GoogleFonts.oswald(
                       color: Colors.white,
                       fontSize: 16,
@@ -377,9 +391,11 @@ class _ProfilePageState extends State<ProfilePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildMetricCard("Points", "1250", Colors.blueAccent),
-                  _buildMetricCard("Séances / Semaine", "3", Colors.green),
-                  _buildMetricCard("Séances Totales", "45", Colors.orange),
+                  _buildMetricCard("Points", points.toString(), Colors.blue),
+                  _buildMetricCard("Séances / Semaine", sessions_per_week.toString(),
+                      Colors.green),
+                  _buildMetricCard("Séances Totales", sessions_completed.toString(),
+                      Colors.orange),
                 ],
               ),
               const SizedBox(height: 20),

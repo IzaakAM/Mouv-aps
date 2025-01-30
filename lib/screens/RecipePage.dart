@@ -20,9 +20,16 @@ class _RecipePageState extends State<RecipePage> {
   String videoUrl = '';
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
-    videoUrl = await ApiService.getVideoURL(widget.recipe.videoId);
+    _fetchVideoUrl();
+  }
+
+  Future<void> _fetchVideoUrl() async {
+    final url = await ApiService.getVideoURL(widget.recipe.videoId);
+    setState(() {
+      videoUrl = url;
+    });
   }
 
   @override
@@ -103,7 +110,7 @@ class _RecipePageState extends State<RecipePage> {
 class IngredientList extends StatelessWidget {
   const IngredientList({Key? key, required this.ingredients}) : super(key: key);
 
-  final Map<String, int> ingredients;
+  final Map<String, String> ingredients;
 
   @override
   Widget build(BuildContext context) {

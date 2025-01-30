@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mouv_aps/services/api_service.dart';
 import '../screens/ProfilePage.dart';
 
 class TopBar extends StatefulWidget implements PreferredSizeWidget {
@@ -16,7 +17,19 @@ class TopBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _TopBarState extends State<TopBar> {
-  int points = 10;
+  int points = 0;
+
+  Future<void> getUserPoints() async {
+    Map<String, dynamic> userInfo = await ApiService.getUserInfo();
+    points = userInfo['points'];
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserPoints();
+  }
+
 
   @override
   Widget build(BuildContext context) {

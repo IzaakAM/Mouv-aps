@@ -118,12 +118,13 @@ class FormPageState extends State<FormPage> {
                 onPressed: () {
                   print("Form Submitted: ${userForm.toJson()}");
                   try {
+                    ApiService.submitQuestionnaire(userForm.toJson());
                     // Save the file if it exists
                     if (filePicked != null) {
                       // Save the file to the server
                       ApiService.uploadPrescription(
                           file: File(filePicked!.path!));
-                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      //Navigator.of(context).popUntil((route) => route.isFirst);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Formulaire soumis avec succès!'),

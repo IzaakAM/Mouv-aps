@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
             "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
         requiredPoints: 10,
         meal: 'breakfast',
-        ingredients: {'ingredient1': 1},
+        ingredients: {'ingredient1': "1"},
         steps: ['step1', 'step2'],
       ),
     );

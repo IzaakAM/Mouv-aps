@@ -3,12 +3,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mouv_aps/models/recipe.dart';
 import 'package:mouv_aps/screens/AllRecipesPage.dart';
 import 'package:mouv_aps/widgets/recipe_card.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/recipe_provider.dart';
 
 // Association of the meals in English and French
 Map<String, String> meals = {
-  'Breakfast': 'Petit-déjeuner',
-  'Lunch': 'Déjeuner',
-  'Dinner': 'Dîner',
+  'breakfast': 'Petit-déjeuner',
+  'lunch': 'Déjeuner',
+  'dinner': 'Dîner',
 };
 
 class CookingPage extends StatefulWidget {
@@ -20,25 +23,48 @@ class CookingPage extends StatefulWidget {
 
 class _CookingPageState extends State<CookingPage> {
   @override
+  void initState() {
+    super.initState();
+    final recipeProvider = Provider.of<RecipeProvider>(context, listen: false);
+    recipeProvider.loadRecipes();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    final recipeProvider = Provider.of<RecipeProvider>(context);
+    final recipes = recipeProvider.recipes;
+    final breakfastRecipes = recipes.where((recipe) => recipe.meal == 'breakfast').toList();
+    final lunchRecipes = recipes.where((recipe) => recipe.meal == 'lunch').toList();
+    final dinnerRecipes = recipes.where((recipe) => recipe.meal == 'dinner').toList();
+    return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
+        child: recipeProvider.isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : recipeProvider.errorMessage.isNotEmpty
+    ? Center(child: Text('Error: ${recipeProvider.errorMessage}'))
+        : SingleChildScrollView(
+    child:
+        Column(
           children: <Widget>[
-            RecipeView(meal: 'Breakfast'),
-            RecipeView(meal: 'Lunch'),
-            RecipeView(meal: 'Dinner'),
+            if (breakfastRecipes.isNotEmpty)
+            RecipeView(meal: 'breakfast', recipes: breakfastRecipes),
+            if (lunchRecipes.isNotEmpty)
+            RecipeView(meal: 'lunch', recipes: lunchRecipes),
+            if (dinnerRecipes.isNotEmpty)
+            RecipeView(meal: 'dinner', recipes: dinnerRecipes),
           ],
         ),
       ),
+    ),
     );
   }
 }
 
 class RecipeView extends StatelessWidget {
-  const RecipeView({super.key, required this.meal});
+  const RecipeView({super.key, required this.meal, required this.recipes});
 
   final String meal; // Breakfast, Lunch, Dinner
+  final List<Recipe> recipes;
 
   @override
   Widget build(BuildContext context) {
@@ -46,84 +72,44 @@ class RecipeView extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(8.0, 8.0, 0, 0),
       margin: const EdgeInsets.fromLTRB(8.0, 8.0, 0, 8.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            meals[meal]!,
-            style: GoogleFonts.oswald(
-              textStyle: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontSize: 30,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: <Widget>[
-                /*RecipeCard(
-                  recipe: Recipe(
-                      id: 1,
-                      title: 'Recipe 1',
-                      videoUrl:
-                          'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
-                      requiredPoints: 10,
-                      duration: 20,
-                      meal: meal,
-                      ingredients: {'ingredient1': 1},
-                      steps: ['step1', 'step2'],
-                      thumbnailUrl:
-                          'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'),
-                ),
-                RecipeCard(
-                  recipe: Recipe(
-                      id: 2,
-                      title: 'Recipe 2',
-                      videoUrl:
-                          'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
-                      requiredPoints: 10,
-                      duration: 20,
-                      meal: meal,
-                      ingredients: {'ingredient1': 1},
-                      steps: ['step1', 'step2'],
-                      thumbnailUrl:
-                          'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'),
-                ),
-                RecipeCard(
-                  recipe: Recipe(
-                      id: 3,
-                      title: 'Recipe 3',
-                      videoUrl:
-                          'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
-                      requiredPoints: 10,
-                      duration: 20,
-                      meal: meal,
-                      ingredients: {'ingredient1': 1},
-                      steps: ['step1', 'step2'],
-                      thumbnailUrl:
-                          'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'),
-                ),*/
-                IconButton(
-                  icon: Icon(
-                      Icons.arrow_circle_right_outlined,
-                      size: 40,
-                      color: Theme.of(context).colorScheme.primary),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AllRecipesPage(meal: meal),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        meals[meal]!,
+                        style: GoogleFonts.oswald(
+                          textStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                       ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+                      const SizedBox(height: 10),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: <Widget>[
+                            for (final recipe in recipes)
+                              RecipeCard(recipe: recipe),
+                            IconButton(
+                              icon: Icon(Icons.arrow_circle_right_outlined,
+                                  size: 40,
+                                  color: Theme.of(context).colorScheme.primary),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        AllRecipesPage(meal: meal),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mouv_aps/providers/chat_provider.dart';
+import 'package:mouv_aps/providers/recipe_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:mouv_aps/providers/session_provider.dart';
@@ -18,6 +19,9 @@ void main() {
         ),
         ChangeNotifierProvider<ChatProvider>(
           create: (_) => ChatProvider(),
+        ),
+        ChangeNotifierProvider<RecipeProvider>(
+          create: (_) => RecipeProvider(),
         ),
       ],
       child: const MyApp(),
